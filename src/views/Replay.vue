@@ -7,9 +7,8 @@
         <label for="twitch">Twitch?</label>
       </div>
     </div>
-
     <div id="thumbnail_container" class="container">
-      <div id="thumbnail" v-on:click="downloadCanvas">
+      <div id="thumbnail" v-on:click="downloadThumbnail">
         <div id="metadata">
           <img id="twitch" src="../assets/TwitchLogo.svg" v-if="checked">
           <div id="stats">
@@ -40,15 +39,18 @@
           </div>
         </div>
         <div id="cover">
-          <p id="title"></p>
+          <p id="title">Dead To Me (feat. Lox Chatterbox)</p>
           <div class="dark_overlay"></div>
           <img id="cover_img" src="https://assets.ppy.sh/beatmaps/788233/covers/cover@2x.jpg">
         </div>
-        <div id="player">
+        <div id="playerRow">
           <img id="avatar" src="https://a.ppy.sh/10440852">
           <p id="username">
             Sibyl
           </p>
+
+          <div id="mods">
+          </div>
         </div>
       </div>
     </div>
@@ -58,6 +60,7 @@
 <script>
 // @ is an alias to /src
 import axios from "axios";
+import { toPng } from "html-to-image";
 
 export default {
   name: "Replay",
@@ -67,8 +70,11 @@ export default {
     }
   },
   methods: {
-    downloadCanvas() {
-      window.htmlToCanvas.downloadCanvas();
+    downloadThumbnail() {
+      var thumbnailElement = document.getElementById("thumbnail");
+      toPng(thumbnailElement).then(dataUrl => {
+        window.fs.downFromDataUrl(dataUrl)
+      })
     },
     getBackground() {
       var image = new Image();
@@ -85,20 +91,39 @@ export default {
 
       return image;
     },
+    getMetadata(score) {
+      var accuracy = score.accuracy * 100;
+      accuracy = accuracy.toFixed(2);
+
+      return {
+        accuracyValue: accuracy,
+        ppValue: parseInt(score.pp),
+        comboValue: score.max_combo
+      }
+    },
     drawMetadata(score) {
       var acc = document.getElementById("acc_value");
       var combo = document.getElementById("combo_value");
       var pp = document.getElementById("pp_value");
 
-      var accuracy = score.accuracy * 100;
-      accuracy = accuracy.toFixed(2);
+      var { accuracyValue, ppValue, comboValue } = this.getMetadata(score);
 
-      var ppFixed = parseInt(score.pp);
-      // ppFixed = Math.round(pp);
+      acc.innerText = accuracyValue;
+      pp.innerText = ppValue;
+      combo.innerText = comboValue;
+    },
+    drawMods(mods) {
+      var modsDiv = document.getElementById("mods");
+      modsDiv.innerHTML = "";
 
-      acc.innerText = accuracy;
-      combo.innerText = score.max_combo;
-      pp.innerText = ppFixed;
+      mods.forEach(mod => {
+        var modImg = new Image();
+        modImg.className = "mod";
+        modImg.style.height = "120px";
+        modImg.src = `Modicons/${mod}.png`;
+
+        modsDiv.appendChild(modImg)
+      })
     },
     getReplayInfo(beatmapId, userId) {
       return axios.get(`beatmaps/${beatmapId}/scores/users/${userId}`)
@@ -111,12 +136,20 @@ export default {
     drawThumbnail(beatmap, replay) {
       this.getUser(replay.playerName).then(player => {
         this.getReplayInfo(beatmap.beatmap_id, player.id).then(replayInfo => {
-          this.drawMetadata(replayInfo.score)
+          this.drawMetadata(replayInfo.score);
+          this.drawMods(replayInfo.score.mods)
+
+          // desc txt file
+          window.fs.writeDesc(beatmap, replayInfo, player);
 
           // map cover
           var coverLink = `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover@2x.jpg`;
           var mapCover = document.getElementById("cover_img");
           mapCover.src = coverLink;
+
+          // map title
+          var title = document.getElementById("title");
+          title.innerText = beatmap.title;
 
           // player
           document.getElementById("avatar").src = player.avatar_url;
@@ -149,9 +182,9 @@ export default {
     prepareThumbnail() {
       window.replay.sendReplayRequest();
       window.replay.receiveReplayRequest((replay) => {
-        this.getBeatmap(replay.beatmapMD5).then((beatmap) =>
-          this.drawThumbnail(beatmap, replay)
-        );
+        this.getBeatmap(replay.beatmapMD5).then((beatmap) => {
+          this.drawThumbnail(beatmap, replay);
+        });
       });
     },
   },
@@ -220,6 +253,10 @@ button {
   background-color: white;
   border-radius: 16px;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 93.5%;
   height: 50%;
 
@@ -233,6 +270,13 @@ button {
 
   width: 100%;
   height: 100%;
+}
+#title {
+  position: absolute;
+
+  font-size: 60pt;
+  z-index: 2;
+  color: white;
 }
 .dark_overlay {
   position: absolute;
@@ -255,13 +299,13 @@ button {
   width: 95px;
   height: 95px;
   margin-bottom: 4px;
-  border-radius: 8px;
 
   position: absolute;
 }
 #stats {
   display: flex;
   flex-grow: 1;
+  margin-right: -80px;
 
   justify-content: flex-end;
 }
@@ -269,7 +313,7 @@ button {
   margin-bottom: -14px;
   text-align: left;
 
-  flex: 0 0 20%;
+  flex: 0 0 18%;
 }
 .stat_container p {
   margin-top: 0px;
@@ -287,7 +331,7 @@ button {
   margin-left: 10px;
 }
 
-#player {
+#playerRow {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -306,5 +350,16 @@ button {
 #username {
   font-size: 60px;
   margin-left: 15px;
+}
+#mods {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  max-height: 100%;
+  width: 100%;
+}
+.mod {
+  height: 120px;
 }
 </style>

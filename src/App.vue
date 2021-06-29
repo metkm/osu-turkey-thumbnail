@@ -5,6 +5,7 @@
       <router-link to="/vs">Vs</router-link>
       <router-link to="/knockout">Knockout</router-link>
       <LoginButton />
+      <LogoutButton />
     </div>
   </div>
   <router-view/>
@@ -12,17 +13,27 @@
 
 <script>
 import LoginButton from "@/components/LoginButton.vue"
+import LogoutButton from "@/components/LogoutButton.vue"
 import axios from 'axios'
 
 export default {
   name: "App",
   mounted() {
-    axios.defaults.baseURL = "https://osu.ppy.sh/api/v2"
+    axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
+    axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getTokens.accessToken}`
 
-    window.app.version(version => console.log(version))
+    axios.interceptors.response.use(response => response, (error) => {
+      if (error.response.status == 401) {
+        console.log("response returned: ", error.response.status)
+        this.$store.dispatch("refreshTokens");
+      }
+    })
+    
+    window.app.message(message => console.log(message));
   },
   components: {
-    LoginButton
+    LoginButton,
+    LogoutButton
   }
 }
 </script>

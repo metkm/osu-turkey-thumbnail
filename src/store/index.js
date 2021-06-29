@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
+  plugins: [createPersistedState()],
   state: {
     accessToken: "",
     refreshToken: "",
@@ -15,6 +17,11 @@ export default createStore({
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${payload.access_token}`
     },
+    DEL_TOKENS(state) {
+      state.accessToken = "",
+      state.refreshToken = "",
+      state.isLogged = false
+    }
   },
   actions: {
     setTokens({ commit }, payload) {
@@ -26,6 +33,9 @@ export default createStore({
         commit("SET_TOKENS", tokens)
       })
     },
+    clearTokens({commit}) {
+      commit("DEL_TOKENS")
+    }
   },
   getters: {
     getTokens(state) {

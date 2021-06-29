@@ -1,7 +1,9 @@
 .DS_Store
 node_modules
 /dist
-
+/build
+electron-builder.yml
+output
 
 # local env files
 .env.local

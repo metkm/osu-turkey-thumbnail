@@ -1,14 +1,10 @@
-const {
-  app,
-  BrowserWindow,
-  ipcMain,
-  dialog,
-  protocol,
-} = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
 const path = require("path");
 const osureplayparser = require("osureplayparser");
 const axios = require("axios");
+const { autoUpdater } = require("electron-updater");
 
+autoUpdater.checkForUpdatesAndNotify();
 require("dotenv").config();
 
 axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
@@ -16,8 +12,8 @@ axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 let axiosAuth = axios.create({
-  baseURL: "https://osu.ppy.sh"
-})
+  baseURL: "https://osu.ppy.sh",
+});
 
 function readReplay(path) {
   return osureplayparser.parseReplay(path);
@@ -30,28 +26,25 @@ function createWindow() {
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      webSecurity: false
+      webSecurity: false,
     },
   });
 
-  mainWindow.webContents.once("did-finish-load", () => {
-    mainWindow.webContents.send("version", app.getVersion())
-  })
+  mainWindow.webContents.send("message", app.getVersion());
 
   if (process.env.DEV) {
     mainWindow.loadURL("http://localhost:8080/");
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(`${__dirname}../../dist/index.html`);
   }
-  mainWindow.maximize();
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 
   return mainWindow;
 }
 
 app.whenReady().then(() => {
   const mainWindow = createWindow();
+  console.log(process.resourcesPath)
 
   protocol.registerHttpProtocol("osuthumbnail", (request) => {
     if (process.env.DEV) {
@@ -63,7 +56,7 @@ app.whenReady().then(() => {
     var url = new URL(request.url);
     var args = new URLSearchParams(url.search);
     var code = args.get("code");
-
+    
     if (!code) {
       return;
     }
@@ -80,7 +73,7 @@ app.whenReady().then(() => {
       .then((resp) => {
         mainWindow.webContents.send("accessToken", resp.data);
       })
-      .catch((err) => console.log(err.response.data));
+      .catch((err) => mainWindow.webContents.send("message", err.response.data));
   });
 
   ipcMain.on("sendRefreshToken", (event, refreshToken) => {

@@ -1,5 +1,5 @@
 <template>
-  <button v-on:click="login" class="login">Login</button>
+  <button v-if="!$store.getters.isLogged" v-on:click="login" class="login">Login</button>
 </template>
 
 <script>
