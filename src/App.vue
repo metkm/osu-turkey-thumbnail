@@ -1,44 +1,40 @@
 <template>
-  <div id="nav">
-    <div class="buttons">
-      <router-link to="/">Replay</router-link>
-      <router-link to="/vs">Vs</router-link>
-      <router-link to="/knockout">Knockout</router-link>
-      <LoginButton />
-      <LogoutButton />
-    </div>
-  </div>
+  <Navbar />
   <router-view/>
+
+  <UpdateNotification />
 </template>
 
 <script>
-import LoginButton from "@/components/LoginButton.vue"
-import LogoutButton from "@/components/LogoutButton.vue"
-import axios from 'axios'
+
+import UpdateNotification from "@/components/UpdateNotification.vue";
+import Navbar from "@/components/Nav.vue";
+import axios from 'axios';
 
 export default {
   name: "App",
   mounted() {
     axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
-    axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getTokens.accessToken}`
 
-    axios.interceptors.response.use(response => response, (error) => {
-      if (error.response.status == 401) {
-        console.log("response returned: ", error.response.status)
-        this.$store.dispatch("refreshTokens");
-      }
-    })
+    if(this.$store.getters.isLogged) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.getters.getTokens.accessToken}`;
+      axios.get("/me")
+      .catch(() => this.$store.dispatch("refreshTokens"))
+    }
     
     window.app.message(message => console.log(message));
   },
   components: {
-    LoginButton,
-    LogoutButton
+    UpdateNotification,
+    Navbar
   }
 }
 </script>
 
 <style>
+:root {
+  --red-button: #ff3a3b
+}
 html, body {
   margin: 0;
   padding: 0px;
@@ -49,7 +45,10 @@ html, body {
   height: 100%;
   max-height: 100%;
 
-  box-sizing: border-box;  
+  box-sizing: border-box;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -63,26 +62,6 @@ html, body {
 
   display: flex;
   flex-direction: column;
-}
-
-#nav {
-  padding: 10px;
-}
-
-a, button {
-  padding: 15px 10px 15px 10px;
-  margin: 5px;
-
-  color: white;
-
-  border: none;
-  border-radius: 5px;
-  background-color: #181818;
-  box-sizing: border-box;
-  text-decoration: none;
-
-  /* flex stuff */
-  flex-grow: 1;
 }
 .buttons {
   display: flex;

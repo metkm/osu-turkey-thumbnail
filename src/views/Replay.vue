@@ -1,57 +1,34 @@
 <template>
   <div class="replay" v-if="$store.getters.isLogged">
-    <div class="path">
-      <button v-on:click="prepareThumbnail">Select Replay File</button>
+    <div class="pageNav">
+      <div class="pageButtons">
+        
+        <RedButton @click="prepareThumbnail">
+          Select Replay File
+        </RedButton>
+
+        <RedButton @click="downloadThumbnail" >
+          Download Thumbnail
+        </RedButton>
+      </div>
+      
       <div class="settings">
-        <input class="checkbox" type="checkbox" name="twitch" v-model="checked">
-        <label for="twitch">Twitch?</label>
+        <div class="setting">
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="twitch"
+            v-model="checked"
+          />
+          <label for="twitch">Twitch?</label>
+        </div>
       </div>
     </div>
     <div id="thumbnail_container" class="container">
-      <div id="thumbnail" v-on:click="downloadThumbnail">
-        <div id="metadata">
-          <img id="twitch" src="../assets/TwitchLogo.svg" v-if="checked">
-          <div id="stats">
-            <div class="stat_container acc_container">
-              <div class="acc_text text">
-                Acc
-              </div>
-              <p id="acc_value" class="value">
-                99.55
-              </p>
-            </div>
-            <div class="stat_container">
-              <div class="combo_text text">
-                Combo
-              </div>
-              <div id="combo_value" class="value">
-                2740
-              </div>
-            </div>
-            <div class="stat_container">
-              <div class="pp_text text">
-                PP
-              </div>
-              <div id="pp_value" class="value">
-                1200
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="cover">
-          <p id="title">Dead To Me (feat. Lox Chatterbox)</p>
-          <div class="dark_overlay"></div>
-          <img id="cover_img" src="https://assets.ppy.sh/beatmaps/788233/covers/cover@2x.jpg">
-        </div>
-        <div id="playerRow">
-          <img id="avatar" src="https://a.ppy.sh/10440852">
-          <p id="username">
-            Sibyl
-          </p>
-
-          <div id="mods">
-          </div>
-        </div>
+      <div id="thumbnail">
+        <ReplayMetadata :enable="checked" :score="score"  />
+        <ReplayCover />
+        <ReplayPlayer :player="player" />
       </div>
     </div>
   </div>
@@ -62,19 +39,40 @@
 import axios from "axios";
 import { toPng } from "html-to-image";
 
+import ReplayCover from "../components/Replay/ReplayCover.vue";
+import ReplayMetadata from "../components/Replay/ReplayMetadata.vue";
+import ReplayPlayer from "../components/Replay/ReplayPlayer.vue";
+
+import RedButton from "../components/Buttons/RedButton.vue";
+
 export default {
   name: "Replay",
+  components: {
+    ReplayCover,
+    ReplayMetadata,
+    ReplayPlayer,
+    RedButton
+  },
   data() {
     return {
-      checked: false
-    }
+      checked: false,
+      score: {
+        acc: 0,
+        pp: 0,
+        combo: 0
+      },
+
+      player: {
+        avatar_url: "https://a.ppy.sh/10440852"
+      }
+    };
   },
   methods: {
     downloadThumbnail() {
       var thumbnailElement = document.getElementById("thumbnail");
-      toPng(thumbnailElement).then(dataUrl => {
-        window.fs.downFromDataUrl(dataUrl)
-      })
+      toPng(thumbnailElement).then((dataUrl) => {
+        window.fs.downFromDataUrl(dataUrl);
+      });
     },
     getBackground() {
       var image = new Image();
@@ -91,53 +89,43 @@ export default {
 
       return image;
     },
-    getMetadata(score) {
-      var accuracy = score.accuracy * 100;
-      accuracy = accuracy.toFixed(2);
-
-      return {
-        accuracyValue: accuracy,
-        ppValue: parseInt(score.pp),
-        comboValue: score.max_combo
-      }
-    },
     drawMetadata(score) {
-      var acc = document.getElementById("acc_value");
-      var combo = document.getElementById("combo_value");
-      var pp = document.getElementById("pp_value");
+      var accuracyVal = score.accuracy * 100;
 
-      var { accuracyValue, ppValue, comboValue } = this.getMetadata(score);
-
-      acc.innerText = accuracyValue;
-      pp.innerText = ppValue;
-      combo.innerText = comboValue;
+      this.score.acc = accuracyVal.toFixed(2);
+      this.score.pp = parseInt(score.pp);
+      this.score.combo = score.max_combo
     },
     drawMods(mods) {
       var modsDiv = document.getElementById("mods");
       modsDiv.innerHTML = "";
 
-      mods.forEach(mod => {
+      mods.forEach((mod) => {
         var modImg = new Image();
         modImg.className = "mod";
         modImg.style.height = "120px";
         modImg.src = `Modicons/${mod}.png`;
 
-        modsDiv.appendChild(modImg)
-      })
+        modsDiv.appendChild(modImg);
+      });
     },
     getReplayInfo(beatmapId, userId) {
-      return axios.get(`beatmaps/${beatmapId}/scores/users/${userId}`)
-      .then(response => response.data)
+      return axios
+        .get(`beatmaps/${beatmapId}/scores/users/${userId}`)
+        .then((response) => response.data)
+        .catch(() => this.$store.dispatch("refreshTokens"))
     },
     getUser(username) {
-      return axios.get(`/users/${username}/osu`)
-      .then(response => response.data)
+      return axios
+        .get(`/users/${username}/osu`)
+        .then((response) => response.data)
+        .catch(() => this.$store.dispatch("refreshTokens"))
     },
     drawThumbnail(beatmap, replay) {
-      this.getUser(replay.playerName).then(player => {
-        this.getReplayInfo(beatmap.beatmap_id, player.id).then(replayInfo => {
+      this.getUser(replay.playerName).then((player) => {
+        this.getReplayInfo(beatmap.beatmap_id, player.id).then((replayInfo) => {
           this.drawMetadata(replayInfo.score);
-          this.drawMods(replayInfo.score.mods)
+          this.drawMods(replayInfo.score.mods);
 
           // desc txt file
           window.fs.writeDesc(beatmap, replayInfo, player);
@@ -152,10 +140,9 @@ export default {
           title.innerText = beatmap.title;
 
           // player
-          document.getElementById("avatar").src = player.avatar_url;
-          document.getElementById("username").innerText = player.username;
-        })
-      })
+          this.player = player;
+        });
+      });
     },
     getBeatmap(md5) {
       const oldAxios = axios.create({
@@ -192,31 +179,6 @@ export default {
 </script>
 
 <style scoped>
-#reference {
-  position: absolute;
-  left: 0;
-  top: 0;
-
-  object-fit: cover;
-  height: 100%;
-  opacity: 0.2;
-}
-#thumbnail {
-  position: relative;
-}
-
-button {
-  padding: 15px 10px 15px 10px;
-  margin: 5px;
-
-  color: white;
-
-  border: none;
-  border-radius: 5px;
-  background-color: #ff3a3b;
-  box-sizing: border-box;
-  flex-grow: 1;
-}
 .replay {
   display: flex;
   flex-direction: column;
@@ -225,131 +187,47 @@ button {
   flex-grow: 1;
   font-family: Century Gothic;
 }
-.path {
+.pageNav {
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+.pageButtons {
+  display: flex;
+  width: 50%;
 }
 .container {
+  display: flex;
+  justify-content: center;
   flex-grow: 1;
   padding: 5px;
+  overflow: hidden;
 }
 .settings {
   display: flex;
+
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.2rem;
 }
 .checkbox {
   padding: 10px;
+}
+.settings {
+  margin: 5px;
 }
 #thumbnail {
   background-color: white;
   width: 1366px;
   height: 768px;
 
+  position: relative;
+  flex-shrink: 0;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-#cover {
-  background-color: white;
-  border-radius: 16px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 93.5%;
-  height: 50%;
-
-  position: relative;
-  overflow: hidden;
-}
-#cover img {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-}
-#title {
-  position: absolute;
-
-  font-size: 60pt;
-  z-index: 2;
-  color: white;
-}
-.dark_overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-
-  top: 0;
-  left: 0;
-
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1;
-}
-#metadata {
-  display: flex;
-  align-items: flex-end;
-  width: 86%;
-  height: 28%;
-}
-#twitch {
-  width: 95px;
-  height: 95px;
-  margin-bottom: 4px;
-
-  position: absolute;
-}
-#stats {
-  display: flex;
-  flex-grow: 1;
-  margin-right: -80px;
-
-  justify-content: flex-end;
-}
-.stat_container {
-  margin-bottom: -14px;
-  text-align: left;
-
-  flex: 0 0 18%;
-}
-.stat_container p {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.acc_container {
-  margin-right: 40px;
-}
-.value {
-  font-size: 76px;
-}
-.text {
-  font-size: 28px;
-  margin-bottom: -10px;
-  margin-left: 10px;
-}
-
-#playerRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 85%;
-  height: 28%;
-}
-#avatar {
-  width: 100px;
-  height: 100px;
-  background-color: black;
-  border-radius: 5px;
-
-  background-image: url("https://a.ppy.sh/10440852");
-  background-size: cover;
-}
-#username {
-  font-size: 60px;
-  margin-left: 15px;
 }
 #mods {
   display: flex;

@@ -3,13 +3,15 @@ const path = require("path");
 const osureplayparser = require("osureplayparser");
 const axios = require("axios");
 const { autoUpdater } = require("electron-updater");
-
-autoUpdater.checkForUpdatesAndNotify();
 require("dotenv").config();
+
 
 axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
 axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Content-Type"] = "application/json";
+const clientSecret = process.env.CLIENT_SECRET
+// process.env.CLIENT_SECRET
+
 
 let axiosAuth = axios.create({
   baseURL: "https://osu.ppy.sh",
@@ -30,7 +32,19 @@ function createWindow() {
     },
   });
 
-  mainWindow.webContents.send("message", app.getVersion());
+  mainWindow.webContents.on("did-finish-load", () => {
+    mainWindow.webContents.send("message", app.getVersion());
+    mainWindow.webContents.send("update-downloaded", "Update downloaded. Will be installed on app quit.");
+  })
+
+  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.on("update-available", () => {
+    mainWindow.webContents.send("notification", "Update found. Downloading...")
+  })
+
+  autoUpdater.on("update-downloaded", () => {
+    mainWindow.webContents.send("notification", "Update downloaded. Will be installed on app quit.")
+  })
 
   if (process.env.DEV) {
     mainWindow.loadURL("http://localhost:8080/");
@@ -44,7 +58,6 @@ function createWindow() {
 
 app.whenReady().then(() => {
   const mainWindow = createWindow();
-  console.log(process.resourcesPath)
 
   protocol.registerHttpProtocol("osuthumbnail", (request) => {
     if (process.env.DEV) {
@@ -65,7 +78,7 @@ app.whenReady().then(() => {
     axiosAuth
       .post("/oauth/token", {
         client_id: 8137,
-        client_secret: process.env.CLIENT_SECRET,
+        client_secret: clientSecret,
         code: code,
         grant_type: "authorization_code",
         redirect_uri: "osuthumbnail://auth",
@@ -80,7 +93,7 @@ app.whenReady().then(() => {
     axiosAuth
       .post("/oauth/token", {
         client_id: 8137,
-        client_secret: process.env.CLIENT_SECRET,
+        client_secret: clientSecret,
         grant_type: "refresh_token",
         refresh_token: refreshToken,
       })

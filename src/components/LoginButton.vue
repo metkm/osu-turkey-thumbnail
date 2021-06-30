@@ -1,5 +1,6 @@
 <template>
-  <button v-if="!$store.getters.isLogged" v-on:click="login" class="login">Login</button>
+  <button v-if="!$store.getters.isLogged" v-on:click="login" class="authButton">Login</button>
+  <button v-else v-on:click="logout" class="authButton">Logout</button>
 </template>
 
 <script>
@@ -22,12 +23,24 @@ export default {
 
       window.location.href = `https://osu.ppy.sh/oauth/authorize?${searchParams.toString()}`;
     },
+    logout() {
+      this.$store.dispatch("clearTokens")
+    }
   },
 };
 </script>
 
 <style>
-.login {
-  background-color: #ff3a3b;
+.authButton {
+  background-color: var(--red-button);
+  color: white;
+
+  border: none;
+  border-radius: 5px;
+  padding: 15px 10px 15px 10px;
+  margin: 5px;
+
+  box-sizing: border-box;
+  flex-basis: 10%;
 }
 </style>

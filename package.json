@@ -1,6 +1,6 @@
 {
   "name": "osuthumbnail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -8,10 +8,12 @@
     "lint": "vue-cli-service lint",
     "electron:start": "set DEV=true && electron .",
     "electron:pack": "electron-builder build --win --dir",
+    "electron:publish": "vue-cli-service build && electron-builder build --win --publish always",
     "packageBoth": "vue-cli-service build && electron-builder build --win --dir"
   },
   "main": "./electron/electron.js",
   "dependencies": {
+    "animejs": "^3.2.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",

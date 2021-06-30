@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer, nativeImage } = require("electron");
-const { writeFile, accessSync, constants, mkdirSync } = require("fs");
+const { writeFile, accessSync, mkdirSync } = require("fs");
 
 function getMetadata(score) {
   var accuracy = score.accuracy * 100;
@@ -66,7 +66,7 @@ contextBridge.exposeInMainWorld("fs", {
 
     writeFile("./output/text.txt", `
 # Baslik
-${replayInfo.username} - ${beatmapInfo.title} [${beatmapInfo.version}] ${accuracyValue}% ${modsString ? modsString : ''} ${comboValue}x ${ppValue}pp
+${player.username} - ${beatmapInfo.title} [${beatmapInfo.version}] ${accuracyValue}% ${modsString ? modsString : ''} ${comboValue}x ${ppValue}pp
 
 # Aciklama
 Oyuncu: https://osu.ppy.sh/users/${player.id}
@@ -74,4 +74,10 @@ Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.beatmapset_id}#osu/${beatm
 Skin: 
     `, err => {})
   }
+})
+
+contextBridge.exposeInMainWorld("update", {
+  update: callback => {
+    ipcRenderer.on("notification", (event, message) => callback(message))
+  },
 })
