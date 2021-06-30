@@ -229,14 +229,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-#mods {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  max-height: 100%;
-  width: 100%;
-}
 .mod {
   height: 120px;
 }

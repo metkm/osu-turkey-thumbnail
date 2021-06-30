@@ -1,5 +1,5 @@
 <template>
-  <div class="UpdateNotification" style="transform: translateY(200px);">
+  <div class="notification" style="transform: translateY(200px);">
     <p>{{ message }}</p>
   </div>
 </template>
@@ -8,7 +8,7 @@
 import anime from "animejs";
 
 export default {
-  name: "UpdateNotification",
+  name: "Notification",
   data() {
     return {
       message: "",
@@ -23,15 +23,17 @@ export default {
   methods: {
     startAnimation() {
       anime({
-        targets: ".UpdateNotification",
+        targets: ".notification",
         translateY: 0,
+        easing: "easeOutExpo",
         complete: () => {
           setTimeout(() => {
             anime({
-              targets: ".UpdateNotification",
-              translateY: 200
+              targets: ".notification",
+              translateY: 200,
+              easing: "easeOutExpo"
             });
-          }, 3000);
+          }, 5000);
         },
       });
     },
@@ -40,13 +42,14 @@ export default {
 </script>
 
 <style>
-.UpdateNotification {
+.notification {
   position: fixed;
   bottom: 0;
   left: 0;
   margin-left: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
+  padding: 5px;
   z-index: 4;
 
   width: 300px;

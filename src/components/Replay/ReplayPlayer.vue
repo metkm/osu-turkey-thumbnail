@@ -40,4 +40,12 @@ export default {
   font-size: 60px;
   margin-left: 15px;
 }
+#mods {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  max-height: 100%;
+  width: 100%;
+}
 </style>

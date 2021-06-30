@@ -2,12 +2,12 @@
   <Navbar />
   <router-view/>
 
-  <UpdateNotification />
+  <Notification />
 </template>
 
 <script>
 
-import UpdateNotification from "@/components/UpdateNotification.vue";
+import Notification from "@/components/Notification.vue";
 import Navbar from "@/components/Nav.vue";
 import axios from 'axios';
 
@@ -25,7 +25,7 @@ export default {
     window.app.message(message => console.log(message));
   },
   components: {
-    UpdateNotification,
+    Notification,
     Navbar
   }
 }

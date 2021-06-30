@@ -9,9 +9,9 @@ require("dotenv").config();
 axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
 axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Content-Type"] = "application/json";
+
 const clientSecret = process.env.CLIENT_SECRET
 // process.env.CLIENT_SECRET
-
 
 let axiosAuth = axios.create({
   baseURL: "https://osu.ppy.sh",
@@ -34,7 +34,6 @@ function createWindow() {
 
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.webContents.send("message", app.getVersion());
-    mainWindow.webContents.send("update-downloaded", "Update downloaded. Will be installed on app quit.");
   })
 
   autoUpdater.checkForUpdatesAndNotify();
