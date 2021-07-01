@@ -6,9 +6,9 @@
         <div class="acc_text text">
           Acc
         </div>
-        <p id="acc_value" class="value">
+        <div id="acc_value" class="value">
           {{ score.acc }}
-        </p>
+        </div>
       </div>
       <div class="stat_container">
         <div class="combo_text text">

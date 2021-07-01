@@ -47,8 +47,14 @@ html, body {
 
   box-sizing: border-box;
 }
+input, button {
+  outline: none;
+}
 body::-webkit-scrollbar {
   display: none;
+}
+img {
+  object-fit: cover;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -66,5 +72,21 @@ body::-webkit-scrollbar {
 .buttons {
   display: flex;
   flex-wrap: wrap;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 5px;
+
+  overflow: hidden;
+}
+.settings {
+  display: flex;
+  margin: 5px;
+
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.2rem;
 }
 </style>
