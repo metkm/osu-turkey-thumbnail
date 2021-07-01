@@ -16,7 +16,7 @@
       <div id="thumbnail">
         <ReplayCover :titleShadow=true :beatmap="beatmap" />
         <div id="bottom"> 
-          <p id="artist"> {{ beatmap?.beatmapset.artist ? beatmap.beatmapset.artist : "Artist Here!" }} - {{ beatmap?.version ? beatmap.version : "Artist Here!" }} </p>
+          <p id="artist"> {{ beatmap?.beatmapset.artist ? beatmap.beatmapset.artist : "Artist Here!" }} - {{ beatmap?.version ? beatmap.version : "Diff Here!" }} </p>
         </div>
       </div>
     </div>
