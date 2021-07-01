@@ -1,17 +1,13 @@
 <template>
-  <div class="replay" v-if="$store.getters.isLogged">
+  <div class="replay container" v-if="$store.getters.isLogged">
     <div class="pageNav">
       <div class="pageButtons">
-        
         <RedButton @click="prepareThumbnail">
           Select Replay File
         </RedButton>
 
-        <RedButton @click="downloadThumbnail" >
-          Download Thumbnail
-        </RedButton>
+        <DownloadButton />
       </div>
-      
       <div class="settings">
         <div class="setting">
           <input
@@ -24,10 +20,10 @@
         </div>
       </div>
     </div>
-    <div id="thumbnail_container" class="container">
+    <div class="container">
       <div id="thumbnail">
         <ReplayMetadata :enable="checked" :score="score"  />
-        <ReplayCover />
+        <ReplayCover :beatmap="beatmap" />
         <ReplayPlayer :player="player" />
       </div>
     </div>
@@ -37,24 +33,26 @@
 <script>
 // @ is an alias to /src
 import axios from "axios";
-import { toPng } from "html-to-image";
+
+import RedButton from "../components/Buttons/RedButton.vue";
+import DownloadButton from "../components/Buttons/DownloadButton.vue";
 
 import ReplayCover from "../components/Replay/ReplayCover.vue";
 import ReplayMetadata from "../components/Replay/ReplayMetadata.vue";
 import ReplayPlayer from "../components/Replay/ReplayPlayer.vue";
 
-import RedButton from "../components/Buttons/RedButton.vue";
-
 export default {
   name: "Replay",
   components: {
+    RedButton,
+    DownloadButton,
     ReplayCover,
     ReplayMetadata,
-    ReplayPlayer,
-    RedButton
+    ReplayPlayer
   },
   data() {
     return {
+      beatmap: undefined,
       checked: false,
       score: {
         acc: 0,
@@ -64,31 +62,10 @@ export default {
 
       player: {
         avatar_url: "https://a.ppy.sh/10440852"
-      }
+      },
     };
   },
   methods: {
-    downloadThumbnail() {
-      var thumbnailElement = document.getElementById("thumbnail");
-      toPng(thumbnailElement).then((dataUrl) => {
-        window.fs.downFromDataUrl(dataUrl);
-      });
-    },
-    getBackground() {
-      var image = new Image();
-
-      image.style.position = "absolute";
-      image.style.top = "0px";
-      image.style.left = "0px";
-      image.style.width = "100%";
-      image.style.height = "100%";
-      image.style.objectFit = "cover";
-      image.crossOrigin = "Anonymous";
-
-      image.src = "https://assets.ppy.sh/beatmaps/770300/covers/cover@2x.jpg";
-
-      return image;
-    },
     drawMetadata(score) {
       var accuracyVal = score.accuracy * 100;
 
@@ -131,15 +108,17 @@ export default {
           window.fs.writeDesc(beatmap, replayInfo, player);
 
           // map cover
-          var coverLink = `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover@2x.jpg`;
-          var mapCover = document.getElementById("cover_img");
-          mapCover.src = coverLink;
+          this.beatmap = {
+            ...beatmap,
+            beatmapset: {
+              title: beatmap.title,
+              covers: {
+                cover: `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg`
+              }
+            }
+          }
 
-          // map title
-          var title = document.getElementById("title");
-          title.innerText = beatmap.title;
-
-          // player
+          // this.beatmap = beatmap
           this.player = player;
         });
       });
@@ -196,25 +175,11 @@ export default {
   display: flex;
   width: 50%;
 }
-.container {
-  display: flex;
-  justify-content: center;
-  flex-grow: 1;
-  padding: 5px;
-  overflow: hidden;
-}
-.settings {
-  display: flex;
-
-  text-decoration: none;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.2rem;
-}
 .checkbox {
   padding: 10px;
 }
-.settings {
-  margin: 5px;
+.mod {
+  height: 120px;
 }
 #thumbnail {
   background-color: white;
@@ -228,8 +193,5 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-.mod {
-  height: 120px;
 }
 </style>
