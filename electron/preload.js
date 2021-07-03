@@ -7,7 +7,7 @@ function getMetadata(score) {
 
   return {
     accuracyValue: accuracy,
-    ppValue: parseInt(score.pp),
+    ppValue: score.pp,
     comboValue: score.max_combo
   }
 }
@@ -54,7 +54,7 @@ contextBridge.exposeInMainWorld("fs", {
   },
   writeDesc: (beatmapInfo, replayInfo, player) => {
     var score = replayInfo.score;
-    var { accuracyValue, ppValue, comboValue } = getMetadata(score);
+    var { accuracyValue, ppValue, comboValue } = getMetadata(replayInfo.score);
     var modsString = "";
     score.mods.forEach(mod => modsString += mod);
 
@@ -66,7 +66,7 @@ contextBridge.exposeInMainWorld("fs", {
 
     writeFile("./output/text.txt", `
 # Baslik
-${player.username} - ${beatmapInfo.title} [${beatmapInfo.version}] ${accuracyValue}% ${modsString ? modsString : ''} ${comboValue}x ${ppValue}pp
+${player.username} - ${beatmapInfo.title} [${beatmapInfo.version}] ${accuracyValue}% ${modsString ? modsString : ''} ${comboValue}x ${ppValue == "Loved" ? "Loved" : `${ppValue}pp`}
 
 # Aciklama
 Oyuncu: https://osu.ppy.sh/users/${player.id}

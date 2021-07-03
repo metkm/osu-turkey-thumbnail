@@ -77,15 +77,9 @@ export default {
   methods: {
     drawMetadata(score) {
       var accuracyVal = score.accuracy * 100;
-
-      if (!score.pp) {
-        this.score.pp = "Loved";
-      } else {
-        this.score.pp = parseInt(score.pp);
-      }
-
       this.score.acc = accuracyVal.toFixed(2);
-      this.score.combo = score.max_combo
+      this.score.pp = score.pp;
+      this.score.combo = score.max_combo;
     },
     drawMods(mods) {
       var modsDiv = document.getElementById("mods");
@@ -115,6 +109,12 @@ export default {
     drawThumbnail(beatmap, replay) {
       this.getUser(replay.playerName).then((player) => {
         this.getReplayInfo(beatmap.beatmap_id, player.id).then((replayInfo) => {
+          if (!replayInfo.score.pp) {
+            replayInfo.score.pp = "Loved";
+          } else {
+            replayInfo.score.pp = parseInt(replayInfo.score.pp);
+          }
+
           this.drawMetadata(replayInfo.score);
           this.drawMods(replayInfo.score.mods);
 
