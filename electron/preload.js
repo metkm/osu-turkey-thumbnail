@@ -1,17 +1,6 @@
 const { contextBridge, ipcRenderer, nativeImage } = require("electron");
 const { writeFile, accessSync, mkdirSync } = require("fs");
 
-function getMetadata(score) {
-  var accuracy = score.accuracy * 100;
-  accuracy = accuracy.toFixed(2);
-
-  return {
-    accuracyValue: accuracy,
-    ppValue: score.pp,
-    comboValue: score.max_combo
-  }
-}
-
 contextBridge.exposeInMainWorld("app", {
   message: callback => {
     ipcRenderer.on("message", (event, args) => callback(args))
@@ -52,27 +41,14 @@ contextBridge.exposeInMainWorld("fs", {
 
     writeFile("./output/Thumbnail.png", pngBuffer, err => {});
   },
-  writeDesc: (beatmapInfo, replayInfo, player) => {
-    var score = replayInfo.score;
-    var { accuracyValue, ppValue, comboValue } = getMetadata(replayInfo.score);
-    var modsString = "";
-    score.mods.forEach(mod => modsString += mod);
-
+  writeDesc: (text) => {
     try {
-      accessSync('./output');
-    } catch (err) {
-      mkdirSync("./output")
+      accessSync("./output");
+    } catch {
+      mkdirSync("./output");
     }
 
-    writeFile("./output/text.txt", `
-# Baslik
-${player.username} - ${beatmapInfo.title} [${beatmapInfo.version}] ${accuracyValue}% ${modsString ? modsString : ''} ${comboValue}x ${ppValue == "Loved" ? "Loved" : `${ppValue}pp`}
-
-# Aciklama
-Oyuncu: https://osu.ppy.sh/users/${player.id}
-Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.beatmapset_id}#osu/${beatmapInfo.beatmap_id}
-Skin: 
-    `, err => {})
+    writeFile("./output/text.txt", text, err => {})
   }
 })
 

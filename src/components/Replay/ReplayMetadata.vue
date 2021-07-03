@@ -100,10 +100,10 @@ export default {
   width: 180px;
   height: 180px;
 
-  right: 0;
-  top: 0;
+  top: 0px;
+  left: 0px;
 
-  margin-top: -40px;
-  margin-right: -40px;
+  margin-left: -60px;
+  margin-top: -60px;
 }
 </style>

@@ -11,19 +11,31 @@
       <div class="settings">
         <div class="setting">
           <input
-          class="checkbox"
-          type="checkbox"
-          name="twitch"
-          v-model="checked"
+            class="checkbox"
+            type="checkbox"
+            name="twitch"
+            v-model="checked"
           />
           <label for="twitch">Twitch?</label>
         </div>
         <div class="setting">
-          <input v-model="gamemode" type="radio" name="gamemode" id="standart" :value="0">
+          <input
+            v-model="gamemode"
+            type="radio"
+            name="gamemode"
+            id="standart"
+            :value="0"
+          />
           <label for="0">Standart</label>
           <!-- <input v-model="gamemode" type="radio" name="gamemode" id="taiko" :value="1"> -->
           <!-- <label for="1">taiko</label> -->
-          <input v-model="gamemode" type="radio" name="gamemode" id="catch" :value="2">
+          <input
+            v-model="gamemode"
+            type="radio"
+            name="gamemode"
+            id="catch"
+            :value="2"
+          />
           <label for="2">catch</label>
         </div>
       </div>
@@ -56,7 +68,7 @@ export default {
     DownloadButton,
     ReplayCover,
     ReplayMetadata,
-    ReplayPlayer
+    ReplayPlayer,
   },
   data() {
     return {
@@ -66,11 +78,11 @@ export default {
       score: {
         acc: 0,
         pp: 0,
-        combo: 0
+        combo: 0,
       },
 
       player: {
-        avatar_url: "https://a.ppy.sh/10440852"
+        avatar_url: "https://a.ppy.sh/10440852",
       },
     };
   },
@@ -98,13 +110,47 @@ export default {
       return axios
         .get(`beatmaps/${beatmapId}/scores/users/${userId}`)
         .then((response) => response.data)
-        .catch(() => this.$store.dispatch("refreshTokens"))
+        .catch(() => this.$store.dispatch("refreshTokens"));
     },
     getUser(username) {
       return axios
         .get(`/users/${username}/osu`)
         .then((response) => response.data)
-        .catch(() => this.$store.dispatch("refreshTokens"))
+        .catch(() => this.$store.dispatch("refreshTokens"));
+    },
+    writeDesc(player, beatmap, replay) {
+      var gamemodeString = "";
+      if (beatmap.mode == 2) {
+        gamemodeString = "[osu!catch] "
+      }
+
+      var modsString = "";
+      replay.score.mods.forEach((mod) => (modsString += mod));
+
+      if (modsString) {
+        modsString += " "
+      }
+
+      // replay info acc etc.
+      var accuracy = replay.score.accuracy * 100;
+      accuracy = accuracy.toFixed(2);
+
+      var pp = replay.score.pp;
+      if (pp != "Loved") {
+        pp += "pp";
+      }
+
+      var text = `
+# Baslik
+${gamemodeString}${player.username} - ${beatmap.title} [${beatmap.version}] ${accuracy}% ${modsString}${replay.score.max_combo}x ${pp}
+
+# Aciklama
+Oyuncu: https://osu.ppy.sh/users/${player.id}
+Beatmap: https://osu.ppy.sh/beatmapsets/${beatmap.beatmapset_id}#osu/${beatmap.beatmap_id}
+Skin: 
+      `;
+
+      window.fs.writeDesc(text);
     },
     drawThumbnail(beatmap, replay) {
       this.getUser(replay.playerName).then((player) => {
@@ -119,7 +165,7 @@ export default {
           this.drawMods(replayInfo.score.mods);
 
           // desc txt file
-          window.fs.writeDesc(beatmap, replayInfo, player);
+          this.writeDesc(player, beatmap, replayInfo);
 
           // map cover
           this.beatmap = {
@@ -127,10 +173,10 @@ export default {
             beatmapset: {
               title: beatmap.title,
               covers: {
-                cover: `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg`
-              }
-            }
-          }
+                cover: `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg`,
+              },
+            },
+          };
 
           // this.beatmap = beatmap
           this.player = player;

@@ -43,10 +43,19 @@ export default {
     DownloadButton
   },
   methods: {
+    writeDesc(beatmap) {
+      var beatmapset = beatmap.beatmapset
+
+      var text = `[Knockout] ${beatmapset.title} [${beatmap.version}]`
+
+      window.fs.writeDesc(text);
+    },
     getBeatmapFromId(beatmapId) {
       axios.get(`/beatmaps/${beatmapId}`)
       .then(response => {
         this.beatmap = response.data;
+
+        this.writeDesc(response.data)
       })
     }
   },
