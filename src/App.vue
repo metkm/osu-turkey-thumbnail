@@ -89,4 +89,8 @@ img {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 1.2rem;
 }
+.setting {
+  margin-left: 10px;
+  margin-right: 10px;
+}
 </style>

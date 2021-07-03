@@ -11,18 +11,26 @@
       <div class="settings">
         <div class="setting">
           <input
-            class="checkbox"
-            type="checkbox"
-            name="twitch"
-            v-model="checked"
+          class="checkbox"
+          type="checkbox"
+          name="twitch"
+          v-model="checked"
           />
           <label for="twitch">Twitch?</label>
+        </div>
+        <div class="setting">
+          <input v-model="gamemode" type="radio" name="gamemode" id="standart" :value="0">
+          <label for="0">Standart</label>
+          <!-- <input v-model="gamemode" type="radio" name="gamemode" id="taiko" :value="1"> -->
+          <!-- <label for="1">taiko</label> -->
+          <input v-model="gamemode" type="radio" name="gamemode" id="catch" :value="2">
+          <label for="2">catch</label>
         </div>
       </div>
     </div>
     <div class="container">
       <div id="thumbnail">
-        <ReplayMetadata :enable="checked" :score="score"  />
+        <ReplayMetadata :enable="checked" :score="score" :gamemode="gamemode" />
         <ReplayCover :beatmap="beatmap" />
         <ReplayPlayer :player="player" />
       </div>
@@ -53,6 +61,7 @@ export default {
   data() {
     return {
       beatmap: undefined,
+      gamemode: 0,
       checked: false,
       score: {
         acc: 0,
@@ -69,8 +78,13 @@ export default {
     drawMetadata(score) {
       var accuracyVal = score.accuracy * 100;
 
+      if (!score.pp) {
+        this.score.pp = "Loved";
+      } else {
+        this.score.pp = parseInt(score.pp);
+      }
+
       this.score.acc = accuracyVal.toFixed(2);
-      this.score.pp = parseInt(score.pp);
       this.score.combo = score.max_combo
     },
     drawMods(mods) {
@@ -81,7 +95,7 @@ export default {
         var modImg = new Image();
         modImg.className = "mod";
         modImg.style.height = "120px";
-        modImg.src = `Modicons/${mod}.png`;
+        modImg.src = require(`@/assets/Modicons/${mod}.png`);
 
         modsDiv.appendChild(modImg);
       });
@@ -188,6 +202,7 @@ export default {
 
   position: relative;
   flex-shrink: 0;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;

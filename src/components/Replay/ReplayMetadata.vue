@@ -1,5 +1,6 @@
 <template>
   <div id="metadata">
+    <img id="gamemode" :src="require(`@/assets/Gamemodeicons/${gamemode}.png`)">
     <img id="twitch" src="../../assets/TwitchLogo.svg" v-if="enable" />
     <div id="stats">
       <div class="stat_container acc_container">
@@ -34,6 +35,7 @@
 export default {
   name: "ReplayMetadata",
   props: {
+    gamemode: Number,
     enable: Boolean,
     score: {
       acc: {
@@ -74,7 +76,7 @@ export default {
 #stats {
   display: flex;
   flex-grow: 1;
-  margin-right: -80px;
+  margin-right: -50px;
 
   justify-content: flex-end;
 }
@@ -91,5 +93,17 @@ export default {
   align-items: flex-end;
   width: 86%;
   height: 28%;
+}
+
+#gamemode {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+
+  right: 0;
+  top: 0;
+
+  margin-top: -40px;
+  margin-right: -40px;
 }
 </style>
