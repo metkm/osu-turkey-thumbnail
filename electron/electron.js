@@ -1,8 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
-const path = require("path");
 const osureplayparser = require("osureplayparser");
-const axios = require("axios");
 const { autoUpdater } = require("electron-updater");
+const path = require("path");
+const axios = require("axios");
 require("dotenv").config();
 
 
