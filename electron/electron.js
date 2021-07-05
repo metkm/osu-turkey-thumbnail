@@ -1,10 +1,9 @@
-const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
-const osureplayparser = require("osureplayparser");
+const { app, BrowserWindow, ipcMain, protocol } = require("electron");
 const { autoUpdater } = require("electron-updater");
+const { registerEvents } = require("./events");
 const path = require("path");
 const axios = require("axios");
 require("dotenv").config();
-
 
 axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
 axios.defaults.headers.common["Accept"] = "application/json";
@@ -17,9 +16,6 @@ let axiosAuth = axios.create({
   baseURL: "https://osu.ppy.sh",
 });
 
-function readReplay(path) {
-  return osureplayparser.parseReplay(path);
-}
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -57,6 +53,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   const mainWindow = createWindow();
+  registerEvents(mainWindow)
 
   protocol.registerHttpProtocol("osuthumbnail", (request) => {
     if (process.env.DEV) {
@@ -101,27 +98,6 @@ app.whenReady().then(() => {
       })
       .catch((err) => {
         console.log(err.response.data);
-      });
-  });
-
-  ipcMain.on("readReplay", (event) => {
-    dialog
-      .showOpenDialog({
-        title: "Replay File",
-        filters: [
-          {
-            name: "Replay File",
-            extensions: ["osr"],
-          },
-        ],
-        properties: ["openFile"],
-      })
-      .then((ReplayFile) => {
-        if (ReplayFile.canceled) {
-          return;
-        }
-        var path = ReplayFile.filePaths[0];
-        event.reply("replay", readReplay(path));
       });
   });
 });

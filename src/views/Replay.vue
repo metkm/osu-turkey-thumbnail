@@ -206,8 +206,7 @@ Skin:
         });
     },
     prepareThumbnail() {
-      window.replay.sendReplayRequest();
-      window.replay.receiveReplayRequest((replay) => {
+      window.replay.read((replay) => {
         this.getBeatmap(replay.beatmapMD5).then((beatmap) => {
           this.drawThumbnail(beatmap, replay);
         });

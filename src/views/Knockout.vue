@@ -6,6 +6,9 @@
           <input type="text" v-model="beatmapId" placeholder="beatmap Id">
         </div>
 
+        <RedButton @click="readReplayFolder">
+          Replays Folder (for description)
+        </RedButton>
         <DownloadButton />
       </div>
       <div class="settings">
@@ -26,6 +29,7 @@
 <script>
 import ReplayCover from "../components/Replay/ReplayCover.vue";
 import DownloadButton from "../components/Buttons/DownloadButton.vue";
+import RedButton from "../components/Buttons/RedButton.vue"
 
 import axios from "axios";
 
@@ -40,12 +44,35 @@ export default {
   },
   components: {
     ReplayCover,
-    DownloadButton
+    DownloadButton,
+    RedButton
   },
   methods: {
+    readReplayFolder() {
+      window.replay.readReplays((usernames) => {
+        var beatmapset = this.beatmap.beatmapset
+
+        var usernameText = ""
+        usernames.forEach(username => {
+          usernameText += `https://osu.ppy.sh/users/${username.replaceAll(' ', '%20')} ${username} \n`
+        })
+
+        var text = `
+# Baslik
+[Knockout] ${beatmapset.title} [${this.beatmap.version}]
+
+# Aciklama
+Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapset.id}#osu/${this.beatmap.id}
+
+# Oyuncular
+${usernameText}        
+        `
+
+        window.fs.writeDesc(text)
+      })
+    },
     writeDesc(beatmap) {
       var beatmapset = beatmap.beatmapset
-
       var text = `[Knockout] ${beatmapset.title} [${beatmap.version}]`
 
       window.fs.writeDesc(text);

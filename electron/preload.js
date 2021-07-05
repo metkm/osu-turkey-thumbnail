@@ -8,11 +8,13 @@ contextBridge.exposeInMainWorld("app", {
 })
 
 contextBridge.exposeInMainWorld("replay", {
-  sendReplayRequest: () => {
+  read: (callback) => {
     ipcRenderer.send("readReplay");
+    ipcRenderer.once("replayFile", (_, replay) => callback(replay))
   },
-  receiveReplayRequest: (callback) => {
-    ipcRenderer.once("replay", (_, replay) => callback(replay))
+  readReplays: (callback) => {
+    ipcRenderer.send("readReplaysFolder");
+    ipcRenderer.on("replayFiles", (_, replays) => callback(replays))
   }
 });
 
