@@ -65,6 +65,7 @@ export default {
 }
 #title {
   position: absolute;
+  width: 90%;
 
   font-size: 60pt;
   z-index: 2;
