@@ -3,6 +3,7 @@ const { autoUpdater } = require("electron-updater");
 const { registerEvents } = require("./events");
 const path = require("path");
 const axios = require("axios");
+const discordClient = require("discord-rich-presence")("768911967523176489");
 require("dotenv").config();
 
 axios.defaults.baseURL = "https://osu.ppy.sh/api/v2";
@@ -54,6 +55,10 @@ function createWindow() {
 app.whenReady().then(() => {
   const mainWindow = createWindow();
   registerEvents(mainWindow)
+  discordClient.updatePresence({
+    state: "Creating thumbnails",
+    largeImageKey: "osuthumbnails"
+  })
 
   protocol.registerHttpProtocol("osuthumbnail", (request) => {
     if (process.env.DEV) {
