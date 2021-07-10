@@ -38,14 +38,12 @@ export default {
 }
 #username {
   font-size: 60px;
-  margin-left: 15px;
+  flex-grow: 1;
 }
 #mods {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
-  max-height: 100%;
-  width: 100%;
+  flex-grow: 4;
 }
 </style>
