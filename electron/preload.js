@@ -3,7 +3,7 @@ const { writeFile, accessSync, mkdirSync } = require("fs");
 
 contextBridge.exposeInMainWorld("app", {
   message: callback => {
-    ipcRenderer.on("message", (_, args) => callback(args))
+    ipcRenderer.on("message", (event, args) => callback(args))
   },
 })
 
@@ -41,7 +41,7 @@ contextBridge.exposeInMainWorld("fs", {
       mkdirSync("./output")
     }
 
-    writeFile("./output/Thumbnail.png", pngBuffer, () => {});
+    writeFile("./output/Thumbnail.png", pngBuffer, err => {});
   },
   writeDesc: (text) => {
     try {
@@ -50,12 +50,12 @@ contextBridge.exposeInMainWorld("fs", {
       mkdirSync("./output");
     }
 
-    writeFile("./output/text.txt", text, () => {})
+    writeFile("./output/text.txt", text, err => {})
   }
 })
 
 contextBridge.exposeInMainWorld("update", {
   update: callback => {
-    ipcRenderer.on("notification", (_, message) => callback(message))
+    ipcRenderer.on("notification", (event, message) => callback(message))
   },
 })

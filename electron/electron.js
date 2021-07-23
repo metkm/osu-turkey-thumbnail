@@ -22,30 +22,12 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
-    title: "osu! Thumbnail",
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      webSecurity: false
+      webSecurity: false,
     },
   });
-  
-  if (process.env.DEV) {
-    mainWindow.loadURL("http://localhost:8080/");
-    mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(`${__dirname}../../dist/index.html`);
-  }
-
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
-  })
-
-  return mainWindow;
-}
-
-app.whenReady().then(() => {
-  const mainWindow = createWindow();
 
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.webContents.send("message", app.getVersion());
@@ -60,6 +42,18 @@ app.whenReady().then(() => {
     mainWindow.webContents.send("notification", "Update downloaded. Will be installed on app quit.")
   })
 
+  if (process.env.DEV) {
+    mainWindow.loadURL("http://localhost:8080/");
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile(`${__dirname}../../dist/index.html`);
+  }
+
+  return mainWindow;
+}
+
+app.whenReady().then(() => {
+  const mainWindow = createWindow();
   registerEvents(mainWindow)
   discordClient.updatePresence({
     state: "Creating thumbnails",
@@ -77,7 +71,9 @@ app.whenReady().then(() => {
     var args = new URLSearchParams(url.search);
     var code = args.get("code");
     
-    if (!code) return;
+    if (!code) {
+      return;
+    }
 
     // auth
     axiosAuth

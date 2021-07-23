@@ -1,9 +1,14 @@
 const { ipcMain, dialog } = require("electron");
-const { readReplay, readReplays } = require("./replay");
+const osureplayparser = require("osureplayparser");
+const { readdirSync, lstatSync } = require("fs");
+
+function readReplay(path) {
+  return osureplayparser.parseReplay(path);
+}
 
 function registerReplay(browserWindow) {
   ipcMain.on("readReplay", () => {
-    var replayFile = dialog.showOpenDialogSync({
+    replayFile = dialog.showOpenDialogSync({
       title: "Replay File",
       filters: [{ name: "Replay File", extensions: ["osr"] }],
       properties: ["openFile"],
@@ -20,14 +25,26 @@ function registerReplay(browserWindow) {
   });
 
   ipcMain.on("readReplaysFolder", () => {
-    var replayFolderPath = dialog.showOpenDialogSync({
+    replayFolderPath = dialog.showOpenDialogSync({
       title: "Replay Folder",
       properties: ["openDirectory"],
     })[0];
     
-    readReplays(replayFolderPath).then(replayContents => {
-      browserWindow.webContents.send("replayFiles", replayContents);
+
+    folderContents = readdirSync(replayFolderPath);
+
+    var replayContents = []
+    folderContents.forEach(file => {
+      var filePath = `${replayFolderPath}\\${file}`
+
+      if (!lstatSync(filePath).isFile() && !filePath.endsWith(".osr")) {
+        return
+      }
+
+      replayContent = readReplay(filePath)
+      replayContents.push(replayContent["playerName"])
     })
+    browserWindow.webContents.send("replayFiles", replayContents)
   });
 }
 

@@ -16,7 +16,7 @@
             name="twitch"
             v-model="checked"
           />
-          <label for="twitch">twitch</label>
+          <label for="twitch">Twitch?</label>
         </div>
         <div class="setting">
           <input
