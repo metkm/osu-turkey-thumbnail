@@ -1,6 +1,6 @@
 const { ipcMain, dialog } = require("electron");
 const osureplayparser = require("osureplayparser");
-const { readdirSync, lstatSync } = require("fs");
+const { Worker } = require("worker_threads");
 
 function readReplay(path) {
   return osureplayparser.parseReplay(path);
@@ -30,21 +30,13 @@ function registerReplay(browserWindow) {
       properties: ["openDirectory"],
     })[0];
     
-
-    folderContents = readdirSync(replayFolderPath);
-
-    var replayContents = []
-    folderContents.forEach(file => {
-      var filePath = `${replayFolderPath}\\${file}`
-
-      if (!lstatSync(filePath).isFile() && !filePath.endsWith(".osr")) {
-        return
-      }
-
-      replayContent = readReplay(filePath)
-      replayContents.push(replayContent["playerName"])
+    const worker = new Worker(`${__dirname}/replayWorker.js`);
+    worker.postMessage({
+      fullPath: replayFolderPath
+    });
+    worker.on("message", result => {
+      browserWindow.webContents.send("replayFiles", result)
     })
-    browserWindow.webContents.send("replayFiles", replayContents)
   });
 }
 
