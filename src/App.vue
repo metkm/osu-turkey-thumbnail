@@ -1,6 +1,10 @@
 <template>
   <Navbar />
-  <router-view/>
+  <router-view v-slot="{ Component }">
+    <transition name="page-change" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 
   <Notification />
 </template>
@@ -32,6 +36,19 @@ export default {
 </script>
 
 <style>
+.page-change-enter-from {
+  transform: translateX(50px);
+  opacity: 0;
+}
+.page-change-leave-to {
+  transform: translateX(-50px);
+  opacity: 0;
+}
+
+.page-change-enter-active, .page-change-leave-active {
+  transition: all 0.2s ease;
+}
+
 :root {
   --red-button: #ff3a3b
 }
@@ -65,9 +82,6 @@ img {
   height: 100%;
   max-height: 100%;
   box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
 }
 .buttons {
   display: flex;
