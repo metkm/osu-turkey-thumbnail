@@ -49,6 +49,11 @@ export default {
   transition: all 0.2s ease;
 }
 
+@font-face {
+  font-family: Century Gothic;
+  src: url('./assets/gothic.ttf');
+}
+
 :root {
   --red-button: #ff3a3b
 }

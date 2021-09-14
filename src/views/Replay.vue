@@ -82,7 +82,7 @@ export default {
       },
 
       player: {
-        avatar_url: "https://a.ppy.sh/10440852",
+        avatar_url: "https://a.ppy.sh/3437939",
       },
     };
   },

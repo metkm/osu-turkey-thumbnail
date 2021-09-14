@@ -33,7 +33,7 @@ export default {
   background-color: black;
   border-radius: 5px;
 
-  background-image: url("https://a.ppy.sh/10440852");
+  background-image: url("");
   background-size: cover;
 }
 #username {
