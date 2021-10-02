@@ -10,6 +10,10 @@
     @apply w-full h-full p-2;
   }
 
+  * {
+    outline: none;
+  }
+
   .link {
     @apply p-2 flex-grow rounded;
     @apply bg-gray-800;
@@ -26,9 +30,11 @@
   }
 
   .button {
-    @apply bg-red-primary;
+    @apply bg-gray-800 hover:bg-red-primary;
+    @apply transition-all;
     @apply p-2;
     @apply rounded;
+    @apply font-semibold;
   }
 }
 
