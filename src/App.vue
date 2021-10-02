@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const store = useStore();
+const router = useRouter();
 
 const isLogged = computed(() => store.state.isLogged);
 const login = () => {
@@ -26,6 +28,8 @@ window.irc.code((code) => {
 if (store.state.isLogged) {
   store.dispatch("refreshTokens");
 }
+
+router.push("/")
 </script>
 
 <template>

@@ -13,6 +13,7 @@
     "autoprefixer": "^10.3.6",
     "axios": "^0.22.0",
     "electron": "^15.1.0",
+    "html-to-image": "^1.8.5",
     "osureplayparser": "^1.0.1",
     "postcss": "^8.3.8",
     "tailwindcss": "^2.2.16",

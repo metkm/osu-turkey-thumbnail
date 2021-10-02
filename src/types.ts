@@ -11,7 +11,7 @@ export interface replayData {
   };
 }
 
-export interface replay {
+export interface replayObject {
   gameMode: number;
   gameVersion: number;
   beatmapMD5: string;
@@ -39,7 +39,7 @@ export interface tokens {
 }
 
 export interface replay {
-  read: () => replay;
+  read: () => replayObject;
 }
 
 export interface irc {

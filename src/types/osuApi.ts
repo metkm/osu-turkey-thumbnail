@@ -50,7 +50,7 @@ export interface BeatmapScoreObject {
     best_id: number
     user_id: number
     accuracy: number
-    mods: any[]
+    mods: string[]
     score: number
     max_combo: number
     perfect: boolean
@@ -63,7 +63,7 @@ export interface BeatmapScoreObject {
       count_miss: number
     },
     passed: boolean,
-    pp: number,
+    pp: string,
     rank: number,
     created_at: number,
     mode: number,

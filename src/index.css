@@ -5,9 +5,15 @@
 
 
 @layer utilities  {
+  @font-face {
+    font-family: Gothic;
+    src: url('./assets/gothic.ttf')
+  }
+
   html, body {
     @apply bg-gray-900 text-white;
     @apply w-full h-full p-2;
+    @apply overflow-hidden;
   }
 
   * {
@@ -25,16 +31,42 @@
     @apply bg-red-primary;
   }
 
-  .page {
-    @apply p-2;
-  }
-
   .button {
     @apply bg-gray-800 hover:bg-red-primary;
     @apply transition-all;
     @apply p-2;
     @apply rounded;
     @apply font-semibold;
+  }
+
+  .thumbnail {
+    aspect-ratio: 16 / 9;
+    height: 100%;
+    max-height: 768px;
+    max-width: 1366px;
+    font-family: Gothic;
+    @apply flex flex-col items-center justify-center;
+    @apply text-black;
+  }
+
+  .stat {
+    @apply text-3xl;
+  }
+
+  .stat-container {
+    flex: 0 0 18%;
+    text-align: left;
+  }
+
+  .value {
+    @apply text-7xl;
+  }
+
+  .cover {
+    width: 93.5%;
+    height: 50%;
+    border-radius: 16px;
+    @apply overflow-hidden;
   }
 }
 
