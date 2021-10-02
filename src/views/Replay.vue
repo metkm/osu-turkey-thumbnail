@@ -32,6 +32,9 @@ const downloadThumbnail = async () => {
   a.download = "thumbnail.png";
   a.click();
 }
+const getImageUrl = (name: string) => {
+  return new URL(`../assets/modIcons/${name}.png`, import.meta.url).href
+}
 </script>
 
 <template>
@@ -72,8 +75,10 @@ const downloadThumbnail = async () => {
       <div class="flex flex-1 items-center justify-start w-6/7">
         <img class="w-24 h-24 rounded-lg object-cover" :src="playerInfo?.avatar_url">
         <p class="text-6xl ml-5"> {{ playerInfo?.username }} </p>
-        <div>
-          {{ replayInfo?.score.mods }}
+        <div class="flex items-center justify-end flex-1">
+          <template v-for="mod in replayInfo?.score.mods">
+            <img class="h-28" :src="getImageUrl(mod)" >
+          </template>
         </div>
       </div>
       <!-- bottom -->
