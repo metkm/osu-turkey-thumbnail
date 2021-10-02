@@ -1,0 +1,34 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer utilities  {
+  html, body {
+    @apply bg-gray-900 text-white;
+    @apply w-full h-full p-2;
+  }
+
+  .link {
+    @apply p-2 flex-grow rounded;
+    @apply bg-gray-800;
+    @apply font-semibold;
+    @apply transition-all;
+  }
+
+  .router-link-active {
+    @apply bg-red-primary;
+  }
+
+  .page {
+    @apply p-2;
+  }
+
+  .button {
+    @apply bg-red-primary;
+    @apply p-2;
+    @apply rounded;
+  }
+}
+

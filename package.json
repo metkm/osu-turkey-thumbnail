@@ -1,61 +1,26 @@
 {
   "name": "osu-turkey-thumbnail",
-  "version": "0.2.7",
-  "private": true,
+  "version": "0.0.0",
+  "main": "electron/main.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:start": "set DEV=true && electron .",
-    "electron:pack": "electron-builder build --win --dir",
-    "electron:publish": "vue-cli-service build && electron-builder build --win --publish always",
-    "packageBoth": "vue-cli-service build && electron-builder build --win --dir"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview",
+    "electron:start": "set DEV=TRUE && electron ."
   },
-  "main": "./electron/electron.js",
   "dependencies": {
-    "animejs": "^3.2.1",
-    "axios": "^0.21.1",
-    "core-js": "^3.6.5",
-    "discord-rich-presence": "^0.0.8",
-    "dotenv": "^10.0.0",
-    "electron-updater": "^4.3.9",
-    "html-to-image": "^1.6.2",
-    "osureplayparser": "^1.0.1",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "vuex-persistedstate": "^4.0.0-beta.3"
+    "@vitejs/plugin-vue": "^1.9.2",
+    "autoprefixer": "^10.3.6",
+    "axios": "^0.22.0",
+    "electron": "^15.1.0",
+    "postcss": "^8.3.8",
+    "tailwindcss": "^2.2.16",
+    "typescript": "^4.4.3",
+    "vite": "^2.6.0",
+    "vue": "^3.2.16",
+    "vue-router": "^4.0.11",
+    "vue-tsc": "^0.3.0",
+    "vuex": "^4.0.2"
   },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "electron": "^13.1.4",
-    "electron-builder": "^22.11.7",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+  "devDependencies": {}
 }
