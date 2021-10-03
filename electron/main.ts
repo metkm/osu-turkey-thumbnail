@@ -8,6 +8,7 @@ async function main() {
     minWidth: 1000,
     minHeight: 800,
     autoHideMenuBar: true,
+    show: false,
     title: "osu! Turkey Thumbnail",
     titleBarStyle: "hidden",
     webPreferences: {
@@ -27,7 +28,7 @@ async function main() {
     })
   })
 
-  loadWindow(window);
+  await loadWindow(window);
   import("./events")
   import("./protocols")
 }

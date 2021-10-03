@@ -4,6 +4,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Notification from "./plugins/Notification.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
+import axios from "axios";
 const store = useStore();
 const router = useRouter();
 

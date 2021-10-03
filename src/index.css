@@ -47,31 +47,22 @@
   }
 
   .thumbnail {
-    min-width: 1280px;
-    min-height: 720px;
+    width: 1280px;
+    height: 720px;
     font-family: Gothic;
-    @apply flex flex-col items-center justify-center;
-    @apply text-black;
-  }
-
-  .stat {
-    @apply text-3xl;
-  }
-
-  .stat-container {
-    flex: 0 0 14%;
-    text-align: left;
-  }
-
-  .value {
-    @apply text-7xl;
+    @apply flex flex-col items-center px-10;
+    @apply text-black bg-white relative;
   }
 
   .cover {
     width: 93.5%;
-    height: 50%;
+    height: 340px;
     border-radius: 16px;
-    @apply overflow-hidden;
+    @apply overflow-hidden text-white w-full;
+  }
+
+  .stat-wrapper {
+    flex: 0 0 18%;
   }
 }
 

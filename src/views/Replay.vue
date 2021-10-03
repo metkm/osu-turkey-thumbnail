@@ -43,7 +43,7 @@ Skin:
   notify("Saved thumbnail and description")
 }
 const getImageUrl = (name: string) => {
-  return new URL(`../assets/modIcons/${name}.png`, import.meta.url).href
+  return import.meta.env.DEV ? `/modIcons/${name}.png` : `./modIcons/${name}.png`
 }
 </script>
 
@@ -62,48 +62,42 @@ const getImageUrl = (name: string) => {
       </div>
     </div>
 
-    <div id="thumbnail" v-if="replayInfo" ref="thumbnail" class="thumbnail relative bg-white">
-      <!-- metadata -->
-      <div class="gap-8 flex flex-1 justify-end items-end w-6/7">
-        <div class="h-24 mb-1 mr-auto">
-          <img v-if="liveplay" class="h-full" src="../assets/twitchIcon.svg">
-        </div>
-        <div class="stat-container mr-10">
-          <p class="stat">Acc</p>
-          <p class="value"> {{ (replayInfo.score.accuracy * 100).toFixed(2) }} </p>
-        </div>
-        <div class="stat-container">
-          <p class="stat">Combo</p>
-          <p class="value"> {{ replayInfo.score.max_combo }} </p>
-        </div>
-        <div class="stat-container">
-          <p class="stat">PP</p>
-          <p class="value"> {{ replayInfo.score.pp ? parseInt(replayInfo.score.pp) : 'Loved' }} </p>
+    <div v-if="replayInfo" ref="thumbnail" class="thumbnail">
+      
+      <div class="flex flex-1 items-end w-11/12">
+        <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
+        <div class="flex flex-1 justify-end -my-2 -mr-12">
+          <div class="stat-wrapper mr-10">
+            <p class="text-3xl ml-4">Acc</p>
+            <p class="text-7xl"> {{ (replayInfo.score.accuracy * 100).toFixed(2) }} </p>
+          </div>
+          <div class="stat-wrapper">
+            <p class="text-3xl ml-4">Combo</p>
+            <p class="text-7xl"> {{ replayInfo.score.max_combo }} </p>
+          </div>
+          <div class="stat-wrapper">
+            <p class="text-3xl ml-4">PP</p>
+            <p class="text-7xl"> {{ replayInfo.score.pp ? parseInt(replayInfo.score.pp) : 'Loved' }} </p>
+          </div>
         </div>
       </div>
-      <!-- metadata -->
 
-      <!-- cover -->
-      <div class="cover relative flex justify-center items-center">
-        <p class="absolute text-8xl text-white z-10"> {{ beatmapInfo?.title }} </p>
-        <div class="absolute w-full h-full bg-black bg-opacity-80" />
+      <div class="cover my-1 relative">
         <img 
           :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover.jpg`"
-          class="w-full h-full object-cover">
+          class="absolute object-cover w-full h-full"
+        >
       </div>
-      <!-- cover -->
 
-      <!-- bottom -->
-      <div class="flex flex-1 items-center justify-start w-6/7">
+      <div class="flex flex-1 items-center gap-10 w-11/12">
         <img class="w-24 h-24 rounded-lg object-cover" :src="playerInfo?.avatar_url">
-        <p class="text-6xl ml-5"> {{ playerInfo?.username }} </p>
-        <div class="flex items-center justify-end flex-1">
+        <p class="text-6xl"> {{ playerInfo?.username }} </p>
+        <div class="flex flex-1 items-center justify-end">
           <template v-for="mod in replayInfo?.score.mods">
-            <img class="h-28" :src="getImageUrl(mod)" >
+            <img class="max-h-28 h-full" :src="getImageUrl(mod)" >
           </template>
         </div>
       </div>
-      <!-- bottom -->
     </div>
   </div>
 </template>

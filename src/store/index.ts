@@ -15,6 +15,9 @@ export default createStore({
       state.accessToken = tokens.access_token;
       state.refreshToken = tokens.refresh_token;
       state.isLogged = true;
+
+      // @ts-ignore
+      axios.defaults.headers!.common["Authorization"] = `Bearer ${state.accessToken}`;
     },
     DEL_TOKENS(state) {
       state.accessToken = "";
@@ -40,6 +43,7 @@ export default createStore({
     async refreshTokens({ commit, state }) {
       // @ts-ignore
       axios.defaults.headers!.common["Authorization"] = `Bearer ${state.accessToken}`;
+
       try {
         await axios.get("https://osu.ppy.sh/api/v2/me");
       } catch {
