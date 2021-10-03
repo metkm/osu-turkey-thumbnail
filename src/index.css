@@ -12,7 +12,7 @@
 
   html, body {
     @apply bg-gray-900 text-white;
-    @apply w-full h-full p-2;
+    @apply w-full h-full;
     @apply overflow-hidden;
   }
 
@@ -47,8 +47,8 @@
   }
 
   .thumbnail {
-    min-width: 1366px;
-    min-height: 768px;
+    min-width: 1280px;
+    min-height: 720px;
     font-family: Gothic;
     @apply flex flex-col items-center justify-center;
     @apply text-black;

@@ -21,3 +21,7 @@ contextBridge.exposeInMainWorld("fs", {
     await ipcRenderer.invoke("downloadThumbnail", content)
   }
 })
+
+contextBridge.exposeInMainWorld("titleBar", {
+  event: (event: string) => ipcRenderer.send(event)
+})

@@ -1,6 +1,4 @@
 import { app, BrowserWindow } from "electron";
-import { registerEvents } from "./events";
-import { registerProtocols } from "./protocols";
 import { loadWindow } from "./utils";
 import { autoUpdater } from "electron-updater";
 
@@ -11,6 +9,7 @@ async function main() {
     minHeight: 800,
     autoHideMenuBar: true,
     title: "osu! Turkey Thumbnail",
+    titleBarStyle: "hidden",
     webPreferences: {
       preload: `${__dirname}/preload.js`,
       contextIsolation: true,
@@ -29,8 +28,8 @@ async function main() {
   })
 
   loadWindow(window);
-  registerEvents();
-  registerProtocols(window);
+  import("./events")
+  import("./protocols")
 }
 
 main();

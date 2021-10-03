@@ -47,7 +47,7 @@ const getImageUrl = (name: string) => {
 
 <template>
   <div id="Replay" class="flex flex-col gap-2 items-center w-full h-full">
-    <div class="flex w-full" style="max-width: 1366px;" >
+    <div class="flex w-full" style="max-width: 1280px;" >
       <div class="flex font-semibold mr-auto">
         <label class="flex items-center gap-1" for="liveplay">
           <input v-model="liveplay" type="checkbox" class="checkbox" id="liveplay">

@@ -51,10 +51,15 @@ export interface fs {
   downloadThumbnail: (content: {dataUrl: string, descText: string}) => void
 }
 
+export interface titleBar {
+  event: (event: "minimize" | "maximize" | "close") => void
+}
+
 declare global {
   interface Window {
     replay: replay
     irc: irc
     fs: fs
+    titleBar: titleBar
   }
 }
