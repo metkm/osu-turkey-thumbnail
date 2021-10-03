@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld("replay", {
 contextBridge.exposeInMainWorld("irc", {
   code: (callback: (code: string) => void) => {
     ipcRenderer.on("code", (_, code) => callback(code));
+  },
+  message: (callback: (message: string) => void) => {
+    ipcRenderer.on("message", (_, message) => callback(message));
   }
 })
 

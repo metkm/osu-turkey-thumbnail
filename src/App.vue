@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import Notification from "./plugins/Notification.vue";
 const store = useStore();
 const router = useRouter();
 
@@ -43,4 +44,6 @@ router.push("/")
       <component :is="Component"></component>
     </keep-alive>
   </router-view>
+  
+  <Notification />
 </template>

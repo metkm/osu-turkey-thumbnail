@@ -2,6 +2,7 @@ import { app, BrowserWindow } from "electron";
 import { registerEvents } from "./events";
 import { registerProtocols } from "./protocols";
 import { loadWindow } from "./utils";
+import { autoUpdater } from "electron-updater";
 
 async function main() {
   await app.whenReady();
@@ -15,6 +16,16 @@ async function main() {
       contextIsolation: true,
       webSecurity: false
     }
+  })
+
+  window.webContents.once("did-finish-load", () => {
+    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.once("update-available", (updateInfo) => {
+      window.webContents.send("message", `Update available. Starting to download version: ${updateInfo.version}`);
+    })
+    autoUpdater.once("update-downloaded", () => {
+      window.webContents.send("message", "Update Downloaded. Will be installed on quit.")
+    })
   })
 
   loadWindow(window);

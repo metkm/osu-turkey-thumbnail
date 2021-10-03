@@ -1,6 +1,6 @@
 {
   "name": "osu-turkey-thumbnail",
-  "version": "0.0.0",
+  "version": "3.0.0",
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -9,11 +9,16 @@
     "electron:start": "set DEV=TRUE && electron ."
   },
   "dependencies": {
+    "axios": "^0.22.0",
+    "electron-builder": "^22.11.7",
+    "electron-updater": "^4.3.9"
+  },
+  "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.2",
     "autoprefixer": "^10.3.6",
-    "axios": "^0.22.0",
     "electron": "^15.1.0",
     "html-to-image": "^1.8.5",
+    "mitt": "^3.0.0",
     "osureplayparser": "^1.0.1",
     "postcss": "^8.3.8",
     "tailwindcss": "^2.2.16",
@@ -24,6 +29,5 @@
     "vue-tsc": "^0.3.0",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
-  },
-  "devDependencies": {}
+  }
 }
