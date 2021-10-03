@@ -3,11 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@layer utilities  {
-  @font-face {
-    font-family: Gothic;
-    src: url('./assets/gothic.ttf')
+@layer components {
+  .link-active {
+    @apply bg-red-primary !important;
   }
 
   html, body {
@@ -25,10 +23,6 @@
     @apply bg-gray-800;
     @apply font-semibold;
     @apply transition-all;
-  }
-
-  .router-link-active {
-    @apply bg-red-primary;
   }
 
   .button {
@@ -72,3 +66,9 @@
   }
 }
 
+@layer utilities  {
+  @font-face {
+    font-family: Gothic;
+    src: url('./assets/gothic.ttf')
+  }
+}

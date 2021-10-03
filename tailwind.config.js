@@ -12,9 +12,6 @@ module.exports = {
           "primary": "#ff3a3b"
         }
       },
-      width: {
-        '6/7': '85%'
-      }
     },
   },
   variants: {
