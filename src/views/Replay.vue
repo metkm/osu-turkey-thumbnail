@@ -83,9 +83,11 @@ const getImageUrl = (name: string) => {
       </div>
 
       <div class="cover my-1 relative">
+        <p class="absolute z-20 title"> {{ beatmapInfo?.title }} </p>
+        <div class="absolute z-10 inset-0 bg-black bg-opacity-80" />
         <img 
           :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover.jpg`"
-          class="absolute object-cover w-full h-full"
+          class="absolute object-cover w-full h-full inset-0"
         >
       </div>
 

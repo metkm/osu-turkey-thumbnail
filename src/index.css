@@ -58,11 +58,17 @@
     width: 93.5%;
     height: 340px;
     border-radius: 16px;
-    @apply overflow-hidden text-white w-full;
+    @apply overflow-hidden text-white w-full p-8;
+    @apply flex items-center leading-tight;
   }
 
   .stat-wrapper {
     flex: 0 0 18%;
+  }
+
+  .title {
+    font-size: 60pt;
+    @apply text-center;
   }
 }
 
