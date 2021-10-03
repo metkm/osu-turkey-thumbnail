@@ -7,13 +7,17 @@
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "electron:start": "set DEV=TRUE && electron .",
-    "electron:test": "yarn build && electron-builder --dir -w"
+    "electron:test": "yarn build && electron-builder --dir -w",
+    "electron:publish": "yarn build && electron-builder -p always -w"
   },
   "build": {
     "appId": "osu-turkey-thumbnail",
     "productName": "Thumbnail Generator",
     "directories": {
       "output": "build"
+    },
+    "publish": {
+      "provider": "github"
     },
     "win": {
       "icon": "src/assets/icon.ico"
@@ -29,11 +33,11 @@
   },
   "dependencies": {
     "electron-updater": "^4.3.9",
-    "vue-tsc": "^0.3.0",
     "osureplayparser": "^1.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.2",
+    "vue-tsc": "^0.3.0",
     "autoprefixer": "^10.3.6",
     "axios": "^0.22.0",
     "electron": "^15.1.0",
