@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { toPng } from "html-to-image";
 import { getBeatmapv1, getPlayer, getReplayInfo } from "../api";
 import { BeatmapScoreObject, v1BeatmapObject, Player } from "../types/osuApi";
+import { notify } from "../plugins/notification";
 
 const replayInfo = ref<BeatmapScoreObject>();
 const beatmapInfo = ref<v1BeatmapObject>()
@@ -22,6 +23,7 @@ const prepareReplay = async () => {
   playerInfo.value = player;
   replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
 }
+
 const downloadThumbnail = async () => {
   const dataUrl = await toPng(thumbnail.value!);
   
@@ -29,16 +31,16 @@ const downloadThumbnail = async () => {
   if (mods) mods += " ";
   var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
   var accuracy = (replayInfo.value!.score.accuracy * 100).toFixed(2);
-  
   var descText = `
-${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayInfo.value?.score.max_combo}x ${pp}
+${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayInfo.value?.score.max_combo}x ${pp}
 
 Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
 Skin: 
 `
 
-  window.fs.downloadThumbnail({ dataUrl, descText });
+  await window.fs.downloadThumbnail({ dataUrl, descText });
+  notify("Saved thumbnail and description")
 }
 const getImageUrl = (name: string) => {
   return new URL(`../assets/modIcons/${name}.png`, import.meta.url).href
@@ -75,7 +77,7 @@ const getImageUrl = (name: string) => {
           <p class="value"> {{ replayInfo.score.max_combo }} </p>
         </div>
         <div class="stat-container">
-          <p class="stat">Acc</p>
+          <p class="stat">PP</p>
           <p class="value"> {{ replayInfo.score.pp ? parseInt(replayInfo.score.pp) : 'Loved' }} </p>
         </div>
       </div>

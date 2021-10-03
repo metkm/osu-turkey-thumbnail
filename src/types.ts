@@ -48,7 +48,7 @@ export interface irc {
 }
 
 export interface fs {
-  downloadThumbnail: (content: {dataUrl: string, descText: string}) => void
+  downloadThumbnail: (content: {dataUrl: string, descText: string}) => Promise<void>
 }
 
 export interface titleBar {
