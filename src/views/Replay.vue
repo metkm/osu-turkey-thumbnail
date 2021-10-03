@@ -8,6 +8,7 @@ const replayInfo = ref<BeatmapScoreObject>();
 const beatmapInfo = ref<v1BeatmapObject>()
 const playerInfo = ref<Player>();
 const thumbnail = ref<HTMLElement>();
+const liveplay = ref(false);
 
 const prepareReplay = async () => {
   const replay = await window.replay.read();
@@ -22,15 +23,22 @@ const prepareReplay = async () => {
   replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
 }
 const downloadThumbnail = async () => {
-  const dataUrl = await toPng(thumbnail.value!, {
-    width: 1366,
-    height: 768,
-  });
+  const dataUrl = await toPng(thumbnail.value!);
+  
+  var mods = replayInfo.value?.score.mods.join("");
+  if (mods) mods += " ";
+  var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
+  var accuracy = (replayInfo.value!.score.accuracy * 100).toFixed(2);
+  
+  var descText = `
+${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayInfo.value?.score.max_combo}x ${pp}
 
-  var a = document.createElement("a");
-  a.href = dataUrl;
-  a.download = "thumbnail.png";
-  a.click();
+Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
+Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
+Skin: 
+`
+
+  window.fs.downloadThumbnail({ dataUrl, descText });
 }
 const getImageUrl = (name: string) => {
   return new URL(`../assets/modIcons/${name}.png`, import.meta.url).href
@@ -39,13 +47,25 @@ const getImageUrl = (name: string) => {
 
 <template>
   <div id="Replay" class="flex flex-col gap-2 items-center w-full h-full">
-    <div class="flex gap-2" >
-      <button class="button" @click="prepareReplay"> Select Replay File </button>
-      <button class="button" @click="downloadThumbnail"> Download Thumbnail </button>
+    <div class="flex w-full" style="max-width: 1366px;" >
+      <div class="flex font-semibold mr-auto">
+        <label class="flex items-center gap-1" for="liveplay">
+          <input v-model="liveplay" type="checkbox" class="checkbox" id="liveplay">
+          Liveplay
+        </label>
+      </div>
+      <div class="flex gap-2">
+        <button class="button" @click="prepareReplay"> Select Replay File </button>
+        <button class="button" @click="downloadThumbnail"> Download Thumbnail </button>
+      </div>
     </div>
-    <div id="thumbnail" ref="thumbnail" class="thumbnail relative bg-white">
+
+    <div id="thumbnail" v-if="replayInfo" ref="thumbnail" class="thumbnail relative bg-white">
       <!-- metadata -->
-      <div class="gap-8 flex flex-1 justify-end items-end w-6/7" v-if="replayInfo">
+      <div class="gap-8 flex flex-1 justify-end items-end w-6/7">
+        <div class="h-24 mb-1 mr-auto">
+          <img v-if="liveplay" class="h-full" src="../assets/twitchIcon.svg">
+        </div>
         <div class="stat-container mr-10">
           <p class="stat">Acc</p>
           <p class="value"> {{ (replayInfo.score.accuracy * 100).toFixed(2) }} </p>

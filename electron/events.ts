@@ -1,7 +1,8 @@
 import osuReplayParser from "osureplayparser";
-import { dialog, ipcMain } from "electron";
+import { dialog, ipcMain, nativeImage } from "electron";
+import { writeFile } from "fs";
 
-export function registerEvents() {
+function replayEvents() {
   ipcMain.handle("readReplay", () => {
     let replayFile = dialog.showOpenDialogSync({
       title: "Replay File",
@@ -14,4 +15,27 @@ export function registerEvents() {
   
     return osuReplayParser.parseReplay(replayPath);
   })
+}
+
+function ircEvents() {
+  ipcMain.handle("downloadThumbnail", (event, args) => {
+    var paths = dialog.showOpenDialogSync({
+      title: "Save thumbnail file",
+      properties: ["openDirectory"]
+    });
+
+    if (!paths) return;
+    var path = paths[0];
+
+    var nativeImg = nativeImage.createFromDataURL(args.dataUrl);
+    var pngBuffer = nativeImg.toPNG();
+
+    writeFile(`${path}\\thumbnail.png`, pngBuffer, () => {});
+    writeFile(`${path}\\desc.txt`, args.descText, () => {});
+  })
+}
+
+export function registerEvents() {
+  replayEvents();
+  ircEvents();
 }

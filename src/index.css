@@ -39,11 +39,16 @@
     @apply font-semibold;
   }
 
+  .checkbox {
+    @apply appearance-none transition-all;
+    @apply w-5 h-5 bg-white rounded;
+    @apply checked:bg-red-primary;
+    background-Image: url('./assets/check.svg');
+  }
+
   .thumbnail {
-    aspect-ratio: 16 / 9;
-    height: 100%;
-    max-height: 768px;
-    max-width: 1366px;
+    min-width: 1366px;
+    min-height: 768px;
     font-family: Gothic;
     @apply flex flex-col items-center justify-center;
     @apply text-black;
@@ -54,7 +59,7 @@
   }
 
   .stat-container {
-    flex: 0 0 18%;
+    flex: 0 0 14%;
     text-align: left;
   }
 

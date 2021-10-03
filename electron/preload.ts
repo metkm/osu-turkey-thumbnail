@@ -12,3 +12,9 @@ contextBridge.exposeInMainWorld("irc", {
     ipcRenderer.on("code", (_, code) => callback(code));
   }
 })
+
+contextBridge.exposeInMainWorld("fs", {
+  downloadThumbnail: async (content: {dataUrl: string, descText: string}) => {
+    await ipcRenderer.invoke("downloadThumbnail", content)
+  }
+})
