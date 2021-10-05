@@ -52,7 +52,7 @@
     width: 93.5%;
     height: 340px;
     border-radius: 16px;
-    @apply overflow-hidden text-white w-full p-8;
+    @apply overflow-hidden text-white w-full;
     @apply flex items-center leading-tight;
   }
 
