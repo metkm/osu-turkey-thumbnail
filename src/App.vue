@@ -4,7 +4,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Notification from "./plugins/Notification.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
-import axios from "axios";
+import AppUpdateBar from "./components/AppUpdateBar.vue";
 const store = useStore();
 const router = useRouter();
 
@@ -51,5 +51,6 @@ router.push("/")
     </router-view>
     
     <Notification />
+    <AppUpdateBar />
   </div>
 </template>

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { loadWindow } from "./utils";
 import { autoUpdater } from "electron-updater";
 
@@ -24,7 +24,8 @@ async function main() {
       window.webContents.send("message", `Update available. Starting to download version: ${updateInfo.version}`);
     })
     autoUpdater.once("update-downloaded", () => {
-      window.webContents.send("message", "Update Downloaded. Will be installed on quit.")
+      window.webContents.send("updateDownloaded");
+      ipcMain.once("updateApp", () => autoUpdater.quitAndInstall(false, true));
     })
   })
 

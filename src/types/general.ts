@@ -45,6 +45,8 @@ export interface replay {
 export interface irc {
   code: (callback: (code: string) => void) => void
   message: (callback: (message: string) => void) => void
+  updateDownloaded: (callback: () => void) => void
+  updateApp: () => void
 }
 
 export interface fs {

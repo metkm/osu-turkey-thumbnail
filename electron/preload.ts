@@ -13,6 +13,12 @@ contextBridge.exposeInMainWorld("irc", {
   },
   message: (callback: (message: string) => void) => {
     ipcRenderer.on("message", (_, message) => callback(message));
+  },
+  updateDownloaded: (callback: (message: string) => void) => {
+    ipcRenderer.on("updateDownloaded", (_, message) => callback(message));
+  },
+  updateApp: () => {
+    ipcRenderer.send("updateApp");
   }
 })
 
