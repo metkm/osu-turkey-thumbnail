@@ -12,10 +12,21 @@ const updateApp = () => {
 </script>
 
 <template>
-  <div class="absolute bottom-0 inset-x-0 p-4 flex items-center gap-4">
-    <div class="button w-1/2" @click="updateApp">
-      Update Now
+  <transition name="update">
+    <div class="absolute bottom-0 inset-x-0 p-4 flex items-center gap-4" v-if="updateDownloaded">
+      <div class="button w-1/2" @click="updateApp">
+        Update Now
+      </div>
+      <p class="font-semibold"> Update downloaded. </p>
     </div>
-    <p class="font-semibold"> Update downloaded. </p>
-  </div>
+  </transition>
 </template>
+
+<style>
+.update-enter-active, .update-leave-active {
+  transition: all 500ms ease;
+}
+.update-enter-from, .update-leave-to {
+  transform: translateY(100%);
+}
+</style>
