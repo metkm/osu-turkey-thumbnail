@@ -1,6 +1,6 @@
 import createPersistedState from "vuex-persistedstate";
 import { createStore } from "vuex";
-import { tokens } from "../types";
+import { tokens } from "../types/general";
 import axios from "axios";
 
 export default createStore({
