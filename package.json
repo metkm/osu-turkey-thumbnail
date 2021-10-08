@@ -1,6 +1,6 @@
 {
   "name": "osu-turkey-thumbnail",
-  "version": "3.2.1",
+  "version": "3.2.0",
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
