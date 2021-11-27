@@ -2,6 +2,9 @@
   "name": "osu-turkey-thumbnail",
   "version": "3.2.1",
   "main": "electron/main.js",
+  "author": {
+    "name": "Sibyl"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
