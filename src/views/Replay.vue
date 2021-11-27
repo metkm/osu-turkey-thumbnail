@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { toPng } from "html-to-image";
-import { getBeatmapv1, getPlayer, getReplayInfo } from "../api";
+import { getBeatmapv1, getPlayer, getReplayInfo, parseMods } from "../api";
 import { BeatmapScoreObject, v1BeatmapObject, Player } from "../types/osuApi";
 import { notify } from "../plugins/notification";
+import { replayObject } from "../types/general";
 
+const replayFile = ref<replayObject>();
 const replayInfo = ref<BeatmapScoreObject>();
 const beatmapInfo = ref<v1BeatmapObject>()
 const playerInfo = ref<Player>();
@@ -12,27 +14,31 @@ const thumbnail = ref<HTMLElement>();
 const liveplay = ref(false);
 
 const prepareReplay = async () => {
-  const replay = await window.replay.read();
-  if (!replay) return;
+  replayFile.value = await window.replay.read(); 
+  if (!replayFile.value) return;
 
   const [beatmap, player] = await Promise.all([
-    getBeatmapv1(replay.beatmapMD5), getPlayer(replay.playerName)
+    getBeatmapv1(replayFile.value.beatmapMD5), getPlayer(replayFile.value.playerName)
   ])
 
   beatmapInfo.value = beatmap;
   playerInfo.value = player;
-  replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
+  try {
+    replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
+  } catch {
+    notify("Can't get user replay info from the beatmap. Falling back to replayFile info");
+  }
 }
 
 const downloadThumbnail = async () => {
   const dataUrl = await toPng(thumbnail.value!);
   
-  var mods = replayInfo.value?.score.mods.join("");
+  var mods = parseMods(replayFile.value!.mods).join("");
   if (mods) mods += " ";
   var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
-  var accuracy = (replayInfo.value!.score.accuracy * 100).toFixed(2);
+  var accuracy = replayInfo.value?.score.accuracy ? (replayInfo.value!.score.accuracy * 100).toFixed(2) : "null";
   var descText = `
-${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayInfo.value?.score.max_combo}x ${pp}
+${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
 
 Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
@@ -62,22 +68,22 @@ const getImageUrl = (name: string) => {
       </div>
     </div>
 
-    <div v-if="replayInfo" ref="thumbnail" class="thumbnail">
+    <div ref="thumbnail" class="thumbnail">
       
       <div class="flex flex-1 items-end w-11/12">
         <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
         <div class="flex flex-1 justify-end -my-2 -mr-12">
           <div class="stat-wrapper mr-10">
             <p class="text-3xl ml-4">Acc</p>
-            <p class="text-7xl"> {{ (replayInfo.score.accuracy * 100).toFixed(2) }} </p>
+            <p class="text-7xl" contenteditable="true"> {{ replayInfo ? (replayInfo.score.accuracy * 100).toFixed(2) : "null" }} </p>
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">Combo</p>
-            <p class="text-7xl"> {{ replayInfo.score.max_combo }} </p>
+            <p class="text-7xl" contenteditable="true"> {{ replayFile?.max_combo }} </p>
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">PP</p>
-            <p class="text-7xl"> {{ replayInfo.score.pp ? parseInt(replayInfo.score.pp) : 'Loved' }} </p>
+            <p class="text-7xl" contenteditable="true"> {{ replayInfo?.score.pp ? parseInt(replayInfo.score.pp) : "Loved" }} </p>
           </div>
         </div>
       </div>

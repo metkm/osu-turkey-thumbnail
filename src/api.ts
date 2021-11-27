@@ -35,7 +35,7 @@ export async function getReplayInfo(beatmapId: number, playerId: number): Promis
   return (await axios.get(`https://osu.ppy.sh/api/v2/beatmaps/${beatmapId}/scores/users/${playerId}`)).data;
 }
 
-export function getMods(modsEnum: number): string[] {
+export function parseMods(modsEnum: number): string[] {
   var parsedMods = []
   for (const [mod, num] of Object.entries(mods)) {
     if (num & modsEnum) {
