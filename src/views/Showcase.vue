@@ -27,9 +27,7 @@ const downloadThumbnail = async () => {
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
 Mapset by: https://osu.ppy.sh/users/${playerInfo.value?.id}
 
-Skin: 
-`
-
+Skin:`;
   await window.fs.downloadThumbnail({ dataUrl, descText });
 }
 
@@ -39,7 +37,7 @@ Skin:
   <div class="flex flex-col w-full h-full items-center gap-2">
     <div class="w-full flex justify-end gap-2" style="max-width: 1280px;">
       <button class="button" @click="prepareReplay">Select Replay File</button>
-      <button class="button">Download Thumbnail</button>
+      <button class="button" @click="downloadThumbnail">Download Thumbnail</button>
     </div>
     <div v-if="playerInfo" ref="thumbnail" class="thumbnail">
       <div class="py-10 flex flex-1">
