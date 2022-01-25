@@ -50,6 +50,7 @@ Skin:
   await window.fs.downloadThumbnail({ dataUrl, descText });
   notify("Saved thumbnail and description")
 }
+
 const getImageUrl = (name: string) => {
   return import.meta.env.DEV ? `/modIcons/${name}.png` : `./modIcons/${name}.png`
 }
@@ -70,8 +71,7 @@ const getImageUrl = (name: string) => {
       </div>
     </div>
 
-    <div ref="thumbnail" class="thumbnail">
-      
+    <div v-if="replayInfo" ref="thumbnail" class="thumbnail">
       <div class="flex flex-1 items-end w-11/12">
         <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
         <div class="flex flex-1 justify-end -my-2 -mr-12">
