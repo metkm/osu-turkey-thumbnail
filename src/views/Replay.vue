@@ -5,7 +5,9 @@ import { getBeatmapv1, getPlayer, getReplayInfo, parseMods } from "../api";
 import { BeatmapScoreObject, v1BeatmapObject, Player } from "../types/osuApi";
 import { notify } from "../plugins/notification";
 import { replayObject } from "../types/general";
+import { useStore } from "vuex";
 
+const store = useStore();
 const replayFile = ref<replayObject>();
 const replayInfo = ref<BeatmapScoreObject>();
 const beatmapInfo = ref<v1BeatmapObject>()
@@ -38,7 +40,7 @@ const downloadThumbnail = async () => {
   var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
   var accuracy = replayInfo.value?.score.accuracy ? (replayInfo.value!.score.accuracy * 100).toFixed(2) : "null";
   var descText = `
-${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} - ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
+${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} ${store.state.seperator} ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
 
 Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}

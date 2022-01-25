@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "electron:start": "set DEV=TRUE && electron .",
+    "electron:start": "DEV=TRUE && electron .",
     "electron:test": "yarn build && electron-builder --dir -w",
     "electron:publish": "yarn build && electron-builder -p always -w"
   },
@@ -40,7 +40,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.2",
-    "vue-tsc": "^0.3.0",
     "autoprefixer": "^10.3.6",
     "axios": "^0.22.0",
     "electron": "^15.1.0",
@@ -53,6 +52,7 @@
     "vite": "^2.6.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.11",
+    "vue-tsc": "^0.3.0",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
   }

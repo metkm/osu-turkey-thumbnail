@@ -41,6 +41,7 @@ router.push("/")
   <div class="flex flex-col gap-2 p-2">
     <div class="flex gap-2">
       <router-link class="link" to="/">Replay</router-link>
+      <router-link class="link" to="/settings">Settings</router-link>
       <button class="button" v-if="!isLogged" @click="login">Login</button>
       <button class="button" v-else @click="logout">Logout</button>
     </div>
