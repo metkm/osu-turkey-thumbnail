@@ -9,7 +9,7 @@ export default createStore({
     isLogged: false,
     accessToken: "",
     refreshToken: "",
-    seperator: "|",
+    separator: "|",
   },
   mutations: {
     SET_TOKENS(state, tokens: tokens) {
@@ -25,8 +25,8 @@ export default createStore({
       state.refreshToken = "";
       state.isLogged = false;
     },
-    SET_SEPERATOR(state, seperator: string) {
-      state.seperator = seperator;
+    SET_SEPARATOR(state, separator: string) {
+      state.separator = separator;
     }
   },
   actions: {
@@ -61,8 +61,8 @@ export default createStore({
         commit("SET_TOKENS", response.data);
       }
     },
-    setSeperator({ commit }, seperator: string) {
-      commit("SET_SEPERATOR", seperator);
+    setSeparator({ commit }, separator: string) {
+      commit("SET_SEPARATOR", separator);
     }
   }
 })

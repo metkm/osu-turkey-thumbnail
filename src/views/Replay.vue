@@ -40,7 +40,7 @@ const downloadThumbnail = async () => {
   var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
   var accuracy = replayInfo.value?.score.accuracy ? (replayInfo.value!.score.accuracy * 100).toFixed(2) : "null";
   var descText = `
-${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} ${store.state.seperator} ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
+${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} ${store.state.separator} ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
 
 Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
