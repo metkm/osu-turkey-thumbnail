@@ -25,6 +25,7 @@ const prepareReplay = async () => {
 
   beatmapInfo.value = beatmap;
   playerInfo.value = player;
+
   try {
     replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
   } catch {
@@ -37,10 +38,15 @@ const downloadThumbnail = async () => {
   
   var mods = parseMods(replayFile.value!.mods).join("");
   if (mods) mods += " ";
+
   var pp = replayInfo.value?.score.pp ? `${parseInt(replayInfo.value.score.pp)}pp` : 'Loved';
   var accuracy = replayInfo.value?.score.accuracy ? (replayInfo.value!.score.accuracy * 100).toFixed(2) : "null";
+  var lp = liveplay.value ? `[Liveplay] ` : '';
+
+  var comb = replayFile.value?.max_combo != beatmapInfo.value?.max_combo ? `${replayFile.value?.max_combo}/${beatmapInfo.value?.max_combo}x` : `FC`;
+
   var descText = `
-${liveplay.value ? `[Liveplay] ` : ''}${playerInfo.value?.username} ${store.state.separator} ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${replayFile.value?.max_combo}x ${pp}
+${lp}${playerInfo.value?.username} ${store.state.separator} ${beatmapInfo.value?.title} [${beatmapInfo.value?.version}] ${accuracy}% ${mods}${comb} ${pp}
 
 Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
@@ -81,7 +87,7 @@ const getImageUrl = (name: string) => {
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">Combo</p>
-            <p class="text-7xl" contenteditable="true"> {{ replayFile?.max_combo }} </p>
+            <p class="text-7xl" :style="{color: replayFile?.max_combo == beatmapInfo?.max_combo ? '#FF3A3B': 'black'}" contenteditable="true"> {{ replayFile?.max_combo }} </p>
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">PP</p>
