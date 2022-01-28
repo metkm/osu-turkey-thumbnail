@@ -41,8 +41,7 @@ Skin:`;
     </div>
     <div v-if="playerInfo" ref="thumbnail" class="thumbnail px-0">
       <div class="flex flex-1">
-        <img :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover@2x.jpg`" class="w-2/6 object-cover" />
-        <div class="flex flex-col p-10 justify-between">
+        <div class="flex flex-grow flex-col p-10 justify-between">
           <div>
             <p class="text-7xl">{{ beatmapInfo?.title }}</p>
             <p class="text-4xl ml-2">{{ beatmapInfo?.artist }}</p>
@@ -55,6 +54,7 @@ Skin:`;
             </div>
           </div>
         </div>
+        <img :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover@2x.jpg`" class="w-2/6 object-cover" />
       </div>
     </div>
   </div>
