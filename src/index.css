@@ -37,7 +37,7 @@
     @apply appearance-none transition-all;
     @apply w-5 h-5 bg-white rounded;
     @apply checked:bg-red-primary;
-    background-Image: url('./assets/check.svg');
+    background-image: url('./assets/check.svg');
   }
 
   .thumbnail {
@@ -45,7 +45,7 @@
     height: 720px;
     font-family: Gothic;
     @apply flex flex-col items-center px-10;
-    @apply text-black bg-white relative;
+    @apply text-black bg-white relative overflow-hidden;
   }
 
   .cover {

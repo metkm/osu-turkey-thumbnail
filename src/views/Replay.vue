@@ -15,6 +15,8 @@ const playerInfo = ref<Player>();
 const thumbnail = ref<HTMLElement>();
 const liveplay = ref(false);
 
+const baseUrl = import.meta.env.BASE_URL
+
 const prepareReplay = async () => {
   replayFile.value = await window.replay.read();
   if (!replayFile.value) return;
@@ -54,9 +56,6 @@ Skin:
   notify("Saved thumbnail and description")
 }
 
-const getImageUrl = (name: string) => {
-  return import.meta.env.DEV ? `/modIcons/${name}.png` : `./modIcons/${name}.png`
-}
 </script>
 
 <template>
@@ -75,6 +74,8 @@ const getImageUrl = (name: string) => {
     </div>
 
     <div ref="thumbnail" class="thumbnail">
+      <img v-if="beatmapInfo?.mode == 2" :src="`${baseUrl}gamemodes/ctb.png`" class="w-32 h-32 absolute -left-6 -top-6" />
+
       <div class="flex flex-1 items-end w-11/12">
         <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
         <div class="flex flex-1 justify-end -my-2 -mr-12">
@@ -112,7 +113,7 @@ const getImageUrl = (name: string) => {
         <p class="text-6xl"> {{ playerInfo?.username }} </p>
         <div class="flex flex-1 items-center justify-end">
           <template v-for="mod in replayInfo?.score.mods">
-            <img class="max-h-28 h-full" :src="getImageUrl(mod)">
+            <img class="max-h-28 h-full" :src="`${baseUrl}modIcons/${mod}.png`">
           </template>
         </div>
       </div>

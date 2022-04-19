@@ -1,7 +1,7 @@
 {
   "name": "osu-turkey-thumbnail",
   "version": "3.3.5",
-  "main": "electron/dist/main.js",
+  "main": "electron/main.js",
   "author": {
     "name": "Sibyl"
   },
