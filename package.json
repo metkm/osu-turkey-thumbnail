@@ -1,7 +1,7 @@
 {
   "name": "osu-turkey-thumbnail",
   "version": "3.3.5",
-  "main": "electron/main.js",
+  "main": "electron/dist/main.js",
   "author": {
     "name": "Sibyl"
   },
@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "electron:start": "DEV=TRUE && electron .",
+    "electron:start": "set DEV=TRUE && electron .",
     "electron:test": "yarn build && electron-builder --dir -w",
     "electron:publish": "yarn build && electron-builder -p always -w"
   },
