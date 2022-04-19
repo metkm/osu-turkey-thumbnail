@@ -16,18 +16,15 @@ const thumbnail = ref<HTMLElement>();
 const liveplay = ref(false);
 
 const prepareReplay = async () => {
-  replayFile.value = await window.replay.read(); 
+  replayFile.value = await window.replay.read();
   if (!replayFile.value) return;
 
-  const [beatmap, player] = await Promise.all([
+  [beatmapInfo.value, playerInfo.value] = await Promise.all([
     getBeatmapv1(replayFile.value.beatmapMD5), getPlayer(replayFile.value.playerName)
   ])
 
-  beatmapInfo.value = beatmap;
-  playerInfo.value = player;
-
   try {
-    replayInfo.value = await getReplayInfo(beatmap.beatmap_id, player.id);
+    replayInfo.value = await getReplayInfo(beatmapInfo.value.beatmap_id, playerInfo.value.id);
   } catch {
     notify("Can't get user replay info from the beatmap. Falling back to replayFile info");
   }
@@ -35,7 +32,7 @@ const prepareReplay = async () => {
 
 const downloadThumbnail = async () => {
   const dataUrl = await toPng(thumbnail.value!);
-  
+
   var mods = parseMods(replayFile.value!.mods).join("");
   if (mods) mods += " ";
 
@@ -64,7 +61,7 @@ const getImageUrl = (name: string) => {
 
 <template>
   <div id="Replay" class="flex flex-col gap-2 items-center w-full h-full">
-    <div class="flex w-full" style="max-width: 1280px;" >
+    <div class="flex w-full" style="max-width: 1280px;">
       <div class="flex font-semibold mr-auto">
         <label class="flex items-center gap-1" for="liveplay">
           <input v-model="liveplay" type="checkbox" class="checkbox" id="liveplay">
@@ -77,21 +74,28 @@ const getImageUrl = (name: string) => {
       </div>
     </div>
 
-    <div v-if="replayInfo" ref="thumbnail" class="thumbnail">
+    <div ref="thumbnail" class="thumbnail">
       <div class="flex flex-1 items-end w-11/12">
         <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
         <div class="flex flex-1 justify-end -my-2 -mr-12">
           <div class="stat-wrapper mr-10">
             <p class="text-3xl ml-4">Acc</p>
-            <p class="text-7xl" contenteditable="true"> {{ replayInfo ? (replayInfo.score.accuracy * 100).toFixed(2) : "null" }} </p>
+            <p class="text-7xl" contenteditable="true"> {{
+              replayInfo ? (replayInfo.score.accuracy * 100).toFixed(2) :
+                "null"
+            }} </p>
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">Combo</p>
-            <p class="text-7xl" :style="{color: replayFile?.max_combo == beatmapInfo?.max_combo ? '#FF3A3B': 'black'}" contenteditable="true"> {{ replayFile?.max_combo }} </p>
+            <p class="text-7xl" :style="{ color: replayFile?.max_combo == beatmapInfo?.max_combo ? '#FF3A3B' : 'black' }"
+              contenteditable="true"> {{ replayFile?.max_combo }} </p>
           </div>
           <div class="stat-wrapper">
             <p class="text-3xl ml-4">PP</p>
-            <p class="text-7xl" contenteditable="true"> {{ replayInfo?.score.pp ? parseInt(replayInfo.score.pp) : "Loved" }} </p>
+            <p class="text-7xl" contenteditable="true"> {{
+              replayInfo?.score.pp ? parseInt(replayInfo.score.pp) :
+              "Loved"
+            }} </p>
           </div>
         </div>
       </div>
@@ -99,10 +103,8 @@ const getImageUrl = (name: string) => {
       <div class="cover my-1 relative">
         <p class="absolute z-20 inset-0 flex items-center justify-center p-10 title"> {{ beatmapInfo?.title }} </p>
         <div class="absolute z-10 inset-0 bg-black bg-opacity-80" />
-        <img 
-          :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover.jpg`"
-          class="absolute object-cover w-full h-full inset-0"
-        >
+        <img :src="`https://assets.ppy.sh/beatmaps/${beatmapInfo?.beatmapset_id}/covers/cover.jpg`"
+          class="absolute object-cover w-full h-full inset-0">
       </div>
 
       <div class="flex flex-1 items-center gap-10 w-11/12">
@@ -110,7 +112,7 @@ const getImageUrl = (name: string) => {
         <p class="text-6xl"> {{ playerInfo?.username }} </p>
         <div class="flex flex-1 items-center justify-end">
           <template v-for="mod in replayInfo?.score.mods">
-            <img class="max-h-28 h-full" :src="getImageUrl(mod)" >
+            <img class="max-h-28 h-full" :src="getImageUrl(mod)">
           </template>
         </div>
       </div>
