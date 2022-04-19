@@ -9,13 +9,18 @@ const thumbnail = ref<HTMLElement>();
 const replayFile = ref<replayObject>();
 const beatmapInfo = ref<v1BeatmapObject>();
 const playerInfo = ref<Player>();
+const replayPlayer = ref<Player>();
 
 const prepareReplay = async () => {
   replayFile.value = await window.replay.read();
   if (!replayFile.value) return;
 
   beatmapInfo.value = await getBeatmapv1(replayFile.value.beatmapMD5);
-  playerInfo.value = await getPlayer(beatmapInfo.value.creator);
+
+  [playerInfo.value, replayPlayer.value] = await Promise.all([
+    getPlayer(beatmapInfo.value.creator),
+    getPlayer(replayFile.value.playerName)
+  ]);
 }
 
 const downloadThumbnail = async () => {
@@ -26,6 +31,7 @@ const downloadThumbnail = async () => {
 
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
 Mapset by: https://osu.ppy.sh/users/${playerInfo.value?.id}
+Replay by: https://osu.ppy.sh/users/${replayPlayer.value?.id}
 
 Skin:`;
   await window.fs.downloadThumbnail({ dataUrl, descText });
