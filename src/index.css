@@ -48,6 +48,11 @@
     @apply text-black bg-white relative overflow-hidden;
   }
 
+  .mode {
+    @apply w-32 h-32 absolute;
+    @apply -left-6 -top-6;
+  }
+
   .cover {
     width: 93.5%;
     height: 340px;

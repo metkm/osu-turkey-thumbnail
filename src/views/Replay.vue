@@ -74,8 +74,10 @@ Skin:
     </div>
 
     <div ref="thumbnail" class="thumbnail">
-      <img v-if="beatmapInfo?.mode == 2" :src="`${baseUrl}gamemodes/ctb.png`" class="w-32 h-32 absolute -left-6 -top-6" />
-
+      <img v-if="beatmapInfo?.mode == 1" :src="`${baseUrl}gamemodes/taiko.png`" class="mode" />
+      <img v-if="beatmapInfo?.mode == 2" :src="`${baseUrl}gamemodes/ctb.png`" class="mode" />
+      <img v-if="beatmapInfo?.mode == 3" :src="`${baseUrl}gamemodes/mania.png`" class="mode" />
+      
       <div class="flex flex-1 items-end w-11/12">
         <img v-if="liveplay" class="absolute h-24 w-24" src="../assets/twitchIcon.svg">
         <div class="flex flex-1 justify-end -my-2 -mr-12">
