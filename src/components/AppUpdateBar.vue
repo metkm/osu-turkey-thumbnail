@@ -15,9 +15,8 @@ const updateApp = () => {
   <transition name="update">
     <div class="absolute bottom-0 inset-x-0 p-4 flex items-center gap-4" v-if="updateDownloaded">
       <div class="button w-1/2" @click="updateApp">
-        Downloaded. Close the app and open it again after 5 - 10 seconds
+        Update now
       </div>
-      <p class="font-semibold"> Update downloaded. </p>
     </div>
   </transition>
 </template>

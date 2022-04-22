@@ -33,7 +33,10 @@ Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/
 Mapset by: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Replay by: https://osu.ppy.sh/users/${replayPlayer.value?.id}
 
-Skin:`;
+Skin:
+
+Playlerinizin kanala atılmasını istiyorsanız: https://forms.gle/Emy3cj8AivSkJRF47`;
+
   await window.fs.downloadThumbnail({ dataUrl, descText });
 }
 
