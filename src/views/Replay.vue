@@ -51,7 +51,8 @@ Oyuncu: https://osu.ppy.sh/users/${playerInfo.value?.id}
 Beatmap: https://osu.ppy.sh/beatmapsets/${beatmapInfo.value?.beatmapset_id}#osu/${beatmapInfo.value?.beatmapset_id}
 Skin: 
 
-Playlerinizin kanala atılmasını istiyorsanız: https://forms.gle/Emy3cj8AivSkJRF47`;
+Playlerinizin kanala atılmasını istiyorsanız: https://forms.gle/Emy3cj8AivSkJRF47
+Lütfen her playinizi değil, atmaya değer olan playlerinizi atın.`;
 
   await window.fs.downloadThumbnail({ dataUrl, descText });
   notify("Saved thumbnail and description")
