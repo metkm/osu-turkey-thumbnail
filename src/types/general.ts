@@ -11,8 +11,15 @@ export interface replayData {
   };
 }
 
+export enum Gamemode {
+  standart = 0,
+  taiko = 1,
+  catchTheBeat = 2,
+  mania = 3
+}
+
 export interface replayObject {
-  gameMode: number
+  gameMode: Gamemode
   gameVersion: number
   beatmapMD5: string
   playerName: string

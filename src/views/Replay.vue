@@ -25,18 +25,25 @@ const prepareReplay = async () => {
   replayFile.value = await window.replay.read();
   if (!replayFile.value) return;
 
+  console.log(replayFile.value);
+
   [beatmapInfo.value, playerInfo.value] = await Promise.all([
     getBeatmapv1(replayFile.value.beatmapMD5), getPlayer(replayFile.value.playerName)
   ])
 
-
   try {
     replayInfo.value = await getReplayInfo(beatmapInfo.value.beatmap_id, playerInfo.value.id);
-    
-    acc.value = replayInfo.value?.score.accuracy ? 
-      (replayInfo.value!.score.accuracy * 100).toFixed(2) :
-      calcAcc(replayFile.value!.number_50s, replayFile.value!.number_100s, replayFile.value!.number_300s, replayFile.value!.misses);
+    acc.value = (replayInfo.value!.score.accuracy * 100).toFixed(2);
   } catch {
+    acc.value = calcAcc(
+      replayFile.value!.number_50s,
+      replayFile.value!.number_100s,
+      replayFile.value!.number_300s,
+      replayFile.value!.katus,
+      replayFile.value!.misses,
+      replayFile.value.gameMode
+    );
+
     notify("Can't get user replay info from the beatmap. Falling back to replayFile info");
   }
 }
@@ -93,12 +100,12 @@ Lütfen her playinizi değil, atmaya değer olan playlerinizi atın.`;
         <div class="flex flex-1 justify-end -my-2 -mr-12">
           <div class="stat-wrapper mr-10">
             <p class="text-3xl ml-4">Acc</p>
-            <p class="text-7xl" contenteditable="true" >
+            <p class="text-7xl" contenteditable="true">
               {{
-                acc
+                  acc
               }}
             </p>
-  
+
 
             <!-- <p class="text-7xl" contenteditable="true"> {{
               replayInfo ? (replayInfo.score.accuracy * 100).toFixed(2) : "xd"
