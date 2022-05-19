@@ -40,6 +40,7 @@ const prepareReplay = async () => {
       replayFile.value!.number_100s,
       replayFile.value!.number_300s,
       replayFile.value!.katus,
+      replayFile.value!.gekis,
       replayFile.value!.misses,
       replayFile.value.gameMode
     );
