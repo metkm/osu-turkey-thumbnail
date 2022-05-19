@@ -14,6 +14,10 @@ export const calcAcc = (n50: number, n100: number, n300: number, katus: number, 
       let misses = totalHits + katus;
 
       return (totalHits / misses * 100).toFixed(2);
+    case Gamemode.taiko:
+      var totalHits = n300 + (0.5 * n100);
+
+      return (( totalHits / ( totalHits + n100 + nmiss ) ) * 100).toFixed(2);
     default:
       "xd"
   }
