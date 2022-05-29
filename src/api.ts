@@ -16,6 +16,8 @@ const mods = {
   "AP": 1 << 11
 }
 
+const gamemodes = ["osu", "taiko", "fruits", "mania"];
+
 export async function getBeatmapv1(md5: string): Promise<v1BeatmapObject> {
   return (await axios.get("https://osu.ppy.sh/api/get_beatmaps", {
     params: {
@@ -31,8 +33,12 @@ export async function getPlayer(playerName: string): Promise<Player> {
   })).data
 }
 
-export async function getReplayInfo(beatmapId: number, playerId: number): Promise<BeatmapScoreObject> {
-  return (await axios.get(`https://osu.ppy.sh/api/v2/beatmaps/${beatmapId}/scores/users/${playerId}`)).data;
+export async function getReplayInfo(beatmapId: number, playerId: number, gamemode: number): Promise<BeatmapScoreObject> {
+  return (await axios.get(`https://osu.ppy.sh/api/v2/beatmaps/${beatmapId}/scores/users/${playerId}`, {
+    params: {
+      mode: gamemodes[gamemode]
+    }
+  })).data;
 }
 
 export function parseMods(modsEnum: number): string[] {

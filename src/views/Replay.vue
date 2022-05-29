@@ -25,14 +25,12 @@ const prepareReplay = async () => {
   replayFile.value = await window.replay.read();
   if (!replayFile.value) return;
 
-  console.log(replayFile.value);
-
   [beatmapInfo.value, playerInfo.value] = await Promise.all([
     getBeatmapv1(replayFile.value.beatmapMD5), getPlayer(replayFile.value.playerName)
   ])
 
   try {
-    replayInfo.value = await getReplayInfo(beatmapInfo.value.beatmap_id, playerInfo.value.id);
+    replayInfo.value = await getReplayInfo(beatmapInfo.value.beatmap_id, playerInfo.value.id, replayFile.value.gameMode);
     acc.value = (replayInfo.value!.score.accuracy * 100).toFixed(2);
   } catch {
     acc.value = calcAcc(
